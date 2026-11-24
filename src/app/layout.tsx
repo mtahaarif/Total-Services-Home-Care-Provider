@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Providers } from "@/components/layout/providers";
+import { SectionReveal } from "@/components/layout/section-reveal";
 import { Analytics } from "@/components/seo/analytics";
 import { JsonLd } from "@/components/seo/json-ld";
 import { pageMeta } from "@/lib/seo";
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={[jsonLd, websiteJsonLd]} />
         <Analytics />
         <Providers>
+          <SectionReveal />
           <Header />
           <main id="main" className="flex-1">
             {children}

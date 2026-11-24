@@ -257,11 +257,13 @@
   pointer-events: none;
 }
 
+/* Route change: the outgoing page dissolves quickly, the incoming page fades
+   in softly over 0.4s ease-out (benevolencehomeservices.com-style page fade). */
 ::view-transition-old(.page) {
-  animation: 180ms var(--ease-soft) both vt-fade-out, 260ms var(--ease-soft) both vt-sink;
+  animation: 160ms ease-out both vt-fade-out;
 }
 ::view-transition-new(.page) {
-  animation: 380ms var(--ease-out-expo) 120ms both vt-fade-in, 520ms var(--ease-out-expo) 60ms both vt-rise;
+  animation: 400ms ease-out 60ms both vt-fade-in;
 }
 
 ::view-transition-group(.morph) {
@@ -284,10 +286,18 @@
 }
 
 @keyframes vt-fade-out { to { opacity: 0; } }
-@keyframes vt-fade-in { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
-@keyframes vt-sink { to { transform: translateY(-24px) scale(0.985); } }
-@keyframes vt-rise { from { transform: translateY(36px); } to { transform: translateY(0); } }
+@keyframes vt-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes vt-via-blur { 30% { filter: blur(4px); } }
+
+/* Section reveal on scroll (see components/layout/section-reveal.tsx):
+   below-the-fold sections fade in over 0.9s as they enter the viewport. */
+.reveal-pending {
+  opacity: 0;
+}
+.reveal-shown {
+  opacity: 1;
+  transition: opacity 0.9s ease-in-out;
+}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*),
@@ -295,6 +305,12 @@
   ::view-transition-group(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
+  }
+  .reveal-pending {
+    opacity: 1 !important;
+  }
+  .reveal-shown {
+    transition: none !important;
   }
   .marquee-track,
   .enter-rise,

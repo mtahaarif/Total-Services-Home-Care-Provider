@@ -49,7 +49,8 @@ Without them, submissions are logged to the console in development and the form 
 - Security headers (CSP, X-Frame-Options, nosniff, HSTS, Referrer/Permissions-Policy) are set in `next.config.ts`. Add any new third-party domain to the CSP there.
 
 ## Motion & UI techniques used
-- **Page transitions** — React `<ViewTransition>` (soft fade/rise) + shared-element image morph from `/services` cards into `/services/[slug]` heroes.
+- **Page transitions** — React `<ViewTransition>`: soft 0.4s ease-out page fade (inspired by benevolencehomeservices.com) + shared-element image morph from `/services` cards into `/services/[slug]` heroes.
+- **Section reveal** — every below-the-fold section fades in over 0.9s as it scrolls into view (`components/layout/section-reveal.tsx`); applied only after load and only off-screen, so it never affects LCP or crawlers.
 - **Smooth scrolling** — Lenis; scroll progress bar.
 - **Home** — masked word-reveal headline, parallax image stack with floating glass cards and a rotating text badge; dual infinite service tickers; scroll-linked word-by-word mission reveal; pinned **horizontal scroll** service rail (swipe carousel on mobile); **vertical stacking** step cards; dark **spotlight-glow bento** with counters; auto-scrolling testimonial/promise columns (pause on hover); town marquee + map; sticky-sidebar FAQ.
 - **About** — un-clipping parallax hero, photo collage, **expanding value panels**, **sticky sidebar** image that cross-fades as each commitment scrolls by.
