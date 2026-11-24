@@ -9,14 +9,17 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { ButtonLink } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
 import { careerFaqs } from "@/lib/content";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Careers — Join Our Caregiving Team",
-  description: `Caregiver jobs in ${site.address.city} and ${site.address.county}, PA. Join ${site.legalName} and make a difference close to home.`,
-  alternates: { canonical: "/careers" },
-};
+export const metadata: Metadata = pageMeta({
+  title: `Caregiver Jobs in ${site.address.city}, PA`,
+  description: `Caregiver and home care aide jobs in ${site.address.city} and ${site.address.county}, PA. Do meaningful work close to home — apply online.`,
+  path: "/careers",
+  image: { url: "/images/caregiver-portrait.jpg", alt: "Smiling caregiver in a yellow cardigan" },
+});
 
 const perks = [
   { icon: HandHeart, title: "Meaningful work", body: "Every shift makes a real difference in someone's day — and in their family's peace of mind." },
@@ -47,7 +50,7 @@ const roles = [
 const lookingFor = [
   "A compassionate, patient and dependable nature",
   "Respect for clients' privacy, dignity and independence",
-  "Ability to complete Pennsylvania's required background checks",
+  "Ability to complete Pennsylvania's required background checks for direct care workers",
   "Reliable communication with our office and families",
   "Caregiving experience is a plus — but heart matters most",
 ];
@@ -55,6 +58,7 @@ const lookingFor = [
 export default function CareersPage() {
   return (
     <PageTransition>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Careers", path: "/careers" }])} />
       <PageHero
         crumb="Careers"
         eyebrow="Join our team"
@@ -112,7 +116,7 @@ export default function CareersPage() {
             {roles.map((r, i) => (
               <Reveal key={r.title} delay={i * 0.08}>
                 <article className="group relative isolate flex h-[26rem] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-7">
-                  <Image src={r.image} alt="" fill sizes="(min-width:1024px) 33vw, 100vw" className="-z-20 object-cover opacity-60 grayscale transition-all duration-1000 ease-out-expo group-hover:scale-110 group-hover:opacity-70 group-hover:grayscale-0" />
+                  <Image quality={60} src={r.image} alt="" fill sizes="(min-width:1024px) 33vw, 100vw" className="-z-20 object-cover opacity-60 grayscale transition-all duration-1000 ease-out-expo group-hover:scale-110 group-hover:opacity-70 group-hover:grayscale-0" />
                   <div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950 via-navy-950/70 to-navy-950/20" />
                   <span className="mb-auto font-serif text-2xl italic text-leaf-300">0{i + 1}</span>
                   <h3 className="text-2xl font-extrabold">{r.title}</h3>
@@ -134,7 +138,9 @@ export default function CareersPage() {
           <div className="flex flex-col gap-8 lg:col-span-5">
             <SectionHeading eyebrow="Apply" title="Start your *application.*" description="It only takes a couple of minutes. We'll follow up by phone or email." />
             <Reveal delay={0.1}>
-              <p className="mb-4 font-bold text-navy-950">What we look for</p>
+              <p className="mb-4 text-navy-950">
+                <strong className="font-bold">What we look for</strong>
+              </p>
               <ul className="flex flex-col gap-3">
                 {lookingFor.map((t) => (
                   <li key={t} className="flex items-start gap-3 text-muted">

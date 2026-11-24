@@ -11,14 +11,17 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ButtonLink } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
 import { faqs } from "@/lib/content";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { fullAddress, site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description: `Meet ${site.legalName} — a family-centered home care agency in ${site.address.city}, PA, creating customized care plans for every client.`,
-  alternates: { canonical: "/about" },
-};
+export const metadata: Metadata = pageMeta({
+  title: "About Our Home Care Agency",
+  description: `A family-centered home care agency in ${site.address.city}, PA, creating customized care plans so loved ones can live safely at home.`,
+  path: "/about",
+  image: { url: "/images/couple-window.jpg", alt: "Senior couple smiling together by a sunny window" },
+});
 
 export default function AboutPage() {
   const initials = site.president
@@ -29,6 +32,7 @@ export default function AboutPage() {
 
   return (
     <PageTransition>
+      <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
       <PageHero
         crumb="About"
         eyebrow={`Home care rooted in ${site.address.city}`}
@@ -44,17 +48,17 @@ export default function AboutPage() {
           <div className="relative grid grid-cols-6 grid-rows-6 gap-3 sm:gap-4">
             <Reveal className="col-span-4 row-span-4 overflow-hidden rounded-[2rem]" x={-30}>
               <div className="relative aspect-[4/3.6] h-full transition-transform duration-1000 ease-out-expo hover:scale-105">
-                <Image src="/images/companionship.jpg" alt="Caregiver holding a senior woman's hands" fill sizes="(min-width:1024px) 30vw, 66vw" className="object-cover" />
+                <Image quality={60} src="/images/companionship.jpg" alt="Caregiver holding a senior woman's hands" fill sizes="(min-width:1024px) 30vw, 66vw" className="object-cover" />
               </div>
             </Reveal>
             <Reveal className="col-span-2 row-span-3 overflow-hidden rounded-[2rem]" delay={0.1} y={50}>
               <div className="relative h-full min-h-40 transition-transform duration-1000 ease-out-expo hover:scale-105">
-                <Image src="/images/senior-man.jpg" alt="Senior man sitting comfortably at home" fill sizes="(min-width:1024px) 15vw, 33vw" className="object-cover" />
+                <Image quality={60} src="/images/senior-man.jpg" alt="Senior man sitting comfortably at home" fill sizes="(min-width:1024px) 15vw, 33vw" className="object-cover" />
               </div>
             </Reveal>
             <Reveal className="col-span-2 col-start-5 row-span-3 overflow-hidden rounded-[2rem]" delay={0.2} y={50}>
               <div className="relative h-full min-h-40 transition-transform duration-1000 ease-out-expo hover:scale-105">
-                <Image src="/images/couple-tender.jpg" alt="Senior couple sharing a tender moment" fill sizes="(min-width:1024px) 15vw, 33vw" className="object-cover" />
+                <Image quality={60} src="/images/couple-tender.jpg" alt="Senior couple sharing a tender moment" fill sizes="(min-width:1024px) 15vw, 33vw" className="object-cover" />
               </div>
             </Reveal>
             <Reveal className="col-span-4 row-span-2 flex items-center gap-4 rounded-[2rem] bg-navy-600 p-5 text-white sm:p-6" delay={0.3}>
@@ -70,7 +74,8 @@ export default function AboutPage() {
             <Reveal delay={0.1}>
               <div className="flex flex-col gap-5 text-lg leading-relaxed text-muted">
                 <p>
-                  {site.legalName} was created to give families in {site.address.city} and across{" "}
+                  <strong className="font-semibold text-navy-800">{site.legalName}</strong> was created to give families in{" "}
+                  {site.address.city} and across{" "}
                   {site.address.county} a dependable, caring partner — so their loved ones can stay safe and comfortable in the
                   place they know best.
                 </p>

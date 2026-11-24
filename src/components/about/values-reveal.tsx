@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { values } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +17,7 @@ export function ValuesReveal() {
         {values.map((v, i) => {
           const isActive = i === active;
           return (
-            <motion.button
+            <m.button
               key={v.title}
               type="button"
               layout
@@ -49,17 +49,17 @@ export function ValuesReveal() {
               )}
 
               {isActive && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                   className="absolute inset-x-0 bottom-0 p-8"
                 >
-                  <h3 className="text-4xl font-extrabold tracking-tight">{v.title}</h3>
-                  <p className="mt-3 max-w-md text-lg leading-relaxed text-white/80">{v.body}</p>
-                </motion.div>
+                  <span className="block text-4xl font-extrabold tracking-tight">{v.title}</span>
+                  <span className="mt-3 block max-w-md text-lg leading-relaxed text-white/80">{v.body}</span>
+                </m.div>
               )}
-            </motion.button>
+            </m.button>
           );
         })}
       </div>
@@ -68,7 +68,7 @@ export function ValuesReveal() {
       <ul className="flex flex-col gap-4 lg:hidden">
         {values.map((v, i) => (
           <li key={v.title} className="relative isolate overflow-hidden rounded-[2rem] p-6 pt-40 text-white">
-            <Image src={v.image} alt="" fill sizes="100vw" className="-z-20 object-cover" />
+            <Image quality={60} src={v.image} alt="" fill sizes="100vw" className="-z-20 object-cover" />
             <div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950 via-navy-950/60 to-transparent" />
             <span className="font-serif text-xl italic text-leaf-300">0{i + 1}</span>
             <h3 className="mt-1 text-2xl font-extrabold">{v.title}</h3>

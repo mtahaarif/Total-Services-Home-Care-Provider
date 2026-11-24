@@ -6,6 +6,9 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, Check, Phone } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
 import { CtaBand } from "@/components/sections/cta-band";
+import { FaqSection } from "@/components/sections/faq-section";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { AnimatedHeadline } from "@/components/ui/animated-headline";
 import { ButtonLink } from "@/components/ui/button";
 import { ServiceIcon } from "@/components/ui/icons";
@@ -22,12 +25,12 @@ export async function generateMetadata({ params }: PageProps<"/services/[slug]">
   const { slug } = await params;
   const s = getService(slug);
   if (!s) return {};
-  return {
+  return pageMeta({
     title: `${s.title} in ${site.address.city}, PA`,
-    description: `${s.short} ${s.items.map((i) => i.name).join(", ")} from ${site.legalName}.`,
-    alternates: { canonical: `/services/${s.slug}` },
-    openGraph: { images: [{ url: s.image, alt: s.imageAlt }] },
-  };
+    description: s.metaDescription,
+    path: `/services/${s.slug}`,
+    image: { url: s.image, alt: s.imageAlt },
+  });
 }
 
 export default async function ServiceDetailPage({ params }: PageProps<"/services/[slug]">) {
@@ -35,9 +38,33 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
   const s = getService(slug);
   if (!s) notFound();
   const others = services.filter((o) => o.slug !== s.slug);
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: s.title,
+    serviceType: s.title,
+    description: s.metaDescription,
+    url: `${site.url}/services/${s.slug}`,
+    provider: { "@id": `${site.url}/#business` },
+    areaServed: { "@type": "AdministrativeArea", name: `${site.address.county}, Pennsylvania` },
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: s.title,
+      itemListElement: s.items.map((i) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: i.name, description: i.desc } })),
+    },
+  };
 
   return (
     <PageTransition>
+      <JsonLd
+        data={[
+          serviceJsonLd,
+          breadcrumbJsonLd([
+            { name: "Services", path: "/services" },
+            { name: s.title, path: `/services/${s.slug}` },
+          ]),
+        ]}
+      />
       <section className="relative overflow-hidden pb-20 pt-32 sm:pt-36">
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[36rem] animate-blob rounded-full bg-leaf-200/50 blur-[110px]" />
         <div className="container-x grid items-center gap-12 lg:grid-cols-2">
@@ -59,6 +86,10 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
             />
             <p className="font-serif text-2xl italic text-navy-500">{s.tagline}</p>
             <p className="max-w-xl text-lg leading-relaxed text-muted">{s.intro}</p>
+            <p className="max-w-xl text-muted">
+              Available from <strong className="font-semibold text-navy-800">{site.legalName}</strong> for families in{" "}
+              {site.address.city} and across {site.address.county}, PA.
+            </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <ButtonLink href={site.phoneHref} icon={<Phone className="size-4" />}>
                 Call {site.phone}
@@ -71,7 +102,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           <div className="relative">
             <ViewTransition name={`svc-img-${s.slug}`} share="morph" default="none">
               <div className="relative aspect-[4/3.4] overflow-hidden rounded-[2.5rem] shadow-[0_40px_80px_-40px_rgb(8_26_48/0.55)]">
-                <Image src={s.image} alt={s.imageAlt} fill priority sizes="(min-width:1024px) 50vw, 100vw" className="object-cover" />
+                <Image src={s.image} alt={s.imageAlt} fill preload quality={60} sizes="(min-width:1024px) 40rem, 100vw" className="object-cover" />
               </div>
             </ViewTransition>
             <div className="glass absolute -bottom-6 left-6 rounded-2xl px-5 py-4">
@@ -120,6 +151,26 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
         </div>
       </section>
 
+      {/* What a visit looks like */}
+      <section className="pb-20 sm:pb-24">
+        <div className="container-x">
+          <Reveal>
+            <div className="grain relative overflow-hidden rounded-[2.5rem] bg-navy-950 p-8 text-white sm:p-14">
+              <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-leaf-400/20 blur-3xl" />
+              <div className="relative z-10 grid gap-8 lg:grid-cols-12">
+                <div className="lg:col-span-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">A day with us</p>
+                  <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
+                    What a {s.title.toLowerCase()} visit <span className="font-serif font-normal italic text-leaf-300">looks like</span>
+                  </h2>
+                </div>
+                <p className="text-lg leading-relaxed text-white/80 lg:col-span-8">{s.visit}</p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* Other services — snap rail */}
       <section className="pb-24 sm:pb-32">
         <div className="container-x">
@@ -132,7 +183,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
               href={`/services/${o.slug}`}
               className="group relative isolate flex h-80 w-72 shrink-0 snap-start flex-col justify-end overflow-hidden rounded-[2rem] p-6 text-white"
             >
-              <Image src={o.image} alt="" fill sizes="18rem" className="-z-20 object-cover transition-transform duration-1000 ease-out-expo group-hover:scale-110" />
+              <Image quality={60} src={o.image} alt="" fill sizes="18rem" className="-z-20 object-cover transition-transform duration-1000 ease-out-expo group-hover:scale-110" />
               <div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950 via-navy-950/40 to-transparent" />
               <span className="glass-dark mb-auto grid size-11 place-items-center rounded-2xl text-leaf-300">
                 <ServiceIcon icon={o.icon} className="size-5" />
@@ -144,6 +195,7 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
         </div>
       </section>
 
+      <FaqSection items={s.faqs} eyebrow={`${s.title} FAQ`} title="Common *questions.*" />
       <CtaBand image={s.image} />
     </PageTransition>
   );

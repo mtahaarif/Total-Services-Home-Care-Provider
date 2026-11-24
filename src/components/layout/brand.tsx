@@ -2,7 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export function Brand({ dark = false, compact = false, className }: { dark?: boolean; compact?: boolean; className?: string }) {
+export function Brand({
+  dark = false,
+  compact = false,
+  eager = false,
+  className,
+}: {
+  dark?: boolean;
+  compact?: boolean;
+  /** Only the above-the-fold (header) logo should load eagerly. */
+  eager?: boolean;
+  className?: string;
+}) {
   return (
     <Link href="/" className={cn("group flex items-center gap-3", className)} aria-label="Total Services Home Care Provider — home">
       <span className={cn("relative grid shrink-0 place-items-center rounded-2xl transition-transform duration-500 ease-out-expo group-hover:-rotate-6 group-hover:scale-105", dark && "bg-white p-1.5")}>
@@ -11,7 +22,7 @@ export function Brand({ dark = false, compact = false, className }: { dark?: boo
           alt=""
           width={201}
           height={217}
-          priority
+          loading={eager ? "eager" : "lazy"}
           className={cn("h-auto", compact ? "w-9" : "w-11", dark && "w-10")}
         />
       </span>

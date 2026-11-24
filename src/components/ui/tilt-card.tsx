@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
+import { m, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useTransform } from "motion/react";
 import { cn } from "@/lib/utils";
 
 /** 3D tilt toward the pointer with a moving sheen. */
@@ -20,7 +20,7 @@ export function TiltCard({ children, className, max = 10 }: { children: ReactNod
 
   return (
     <div className="[perspective:1000px]">
-      <motion.div
+      <m.div
         ref={ref}
         onPointerMove={(e) => {
           if (reduce || e.pointerType !== "mouse" || !ref.current) return;
@@ -36,12 +36,12 @@ export function TiltCard({ children, className, max = 10 }: { children: ReactNod
         className={cn("group relative", className)}
       >
         {children}
-        <motion.div
+        <m.div
           aria-hidden
           style={{ background: sheen }}
           className="pointer-events-none absolute inset-0 rounded-[inherit] opacity-0 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-100"
         />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

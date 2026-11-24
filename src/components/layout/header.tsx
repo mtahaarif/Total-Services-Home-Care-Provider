@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "motion/react";
+import { AnimatePresence, m, useMotionValueEvent, useScroll } from "motion/react";
 import { ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { fullAddress, nav, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -49,7 +49,7 @@ export function Header() {
         Skip to content
       </a>
 
-      <motion.header
+      <m.header
         style={{ viewTransitionName: "site-header" }}
         animate={{ y: hidden ? -120 : 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -61,7 +61,7 @@ export function Header() {
             scrolled || open ? "glass" : "border border-transparent bg-transparent",
           )}
         >
-          <Brand compact={scrolled} />
+          <Brand compact={scrolled} eager />
 
           <nav aria-label="Main" className="hidden lg:block" onPointerLeave={() => setHovered(null)}>
             <ul className="flex items-center gap-1 rounded-full p-1">
@@ -70,7 +70,7 @@ export function Header() {
                 return (
                   <li key={item.href} className="relative" onPointerEnter={() => setHovered(item.href)}>
                     {hovered === item.href && (
-                      <motion.span
+                      <m.span
                         layoutId="nav-hover"
                         className="absolute inset-0 rounded-full bg-navy-50"
                         transition={{ type: "spring", stiffness: 380, damping: 32 }}
@@ -86,7 +86,7 @@ export function Header() {
                     >
                       {item.label}
                       {active && (
-                        <motion.span
+                        <m.span
                           layoutId="nav-active"
                           className="absolute inset-x-4 -bottom-0.5 h-[2px] rounded-full bg-leaf-400"
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
@@ -128,11 +128,11 @@ export function Header() {
             </button>
           </div>
         </div>
-      </motion.header>
+      </m.header>
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             id="mobile-menu"
             className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-navy-950 px-5 pb-8 pt-28 text-white lg:hidden"
             initial={{ clipPath: "circle(0% at calc(100% - 44px) 44px)" }}
@@ -145,7 +145,7 @@ export function Header() {
             <nav aria-label="Mobile" className="relative">
               <ul className="flex flex-col">
                 {nav.map((item, i) => (
-                  <motion.li
+                  <m.li
                     key={item.href}
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -162,11 +162,11 @@ export function Header() {
                       </span>
                       <ArrowUpRight className="size-6 text-white/40" />
                     </Link>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
             </nav>
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
@@ -178,8 +178,8 @@ export function Header() {
               <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-2xl border border-white/15 px-5 py-4 text-sm text-white/80">
                 <MapPin className="size-5 shrink-0 text-leaf-300" /> {fullAddress}
               </a>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

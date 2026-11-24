@@ -4,6 +4,9 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Providers } from "@/components/layout/providers";
+import { Analytics } from "@/components/seo/analytics";
+import { JsonLd } from "@/components/seo/json-ld";
+import { pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { allServiceNames } from "@/lib/services";
 
@@ -17,19 +20,29 @@ const instrument = Instrument_Serif({
   variable: "--font-instrument",
   subsets: ["latin"],
   weight: "400",
-  style: ["normal", "italic"],
+  style: "italic", // the serif is only ever used in italic — skip the upright file
   display: "swap",
 });
 
+const home = pageMeta({
+  title: `In-Home Care in ${site.address.city}, PA | ${site.name}`,
+  description: site.description,
+  path: "/",
+  absoluteTitle: true,
+});
+
 export const metadata: Metadata = {
+  ...home,
   metadataBase: new URL(site.url),
   title: {
-    default: "Total Services Home Care Provider | In-Home Care in Glenolden, PA",
-    template: "%s | Total Services Home Care Provider",
+    default: `In-Home Care in ${site.address.city}, PA | ${site.name}`,
+    template: `%s | ${site.name}`,
   },
-  description: site.description,
+  applicationName: site.legalName,
+  formatDetection: { telephone: true, address: true },
   keywords: [
-    "home care Glenolden PA",
+    "home care Drexel Hill PA",
+    "home care Upper Darby PA",
     "home care Delaware County PA",
     "in-home care",
     "senior care",
@@ -38,20 +51,19 @@ export const metadata: Metadata = {
     "companion care",
     "home health aide",
   ],
-  openGraph: {
-    type: "website",
-    siteName: site.legalName,
-    title: "Total Services Home Care Provider",
-    description: site.description,
-    images: [{ url: "/images/hero-reading.jpg", width: 1600, height: 1067, alt: "Caregiver reading with a senior man at home" }],
-    locale: "en_US",
-  },
-  twitter: { card: "summary_large_image" },
-  alternates: { canonical: "/" },
 };
 
 export const viewport: Viewport = {
   themeColor: "#081a30",
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${site.url}/#website`,
+  name: site.legalName,
+  url: site.url,
+  publisher: { "@id": `${site.url}/#business` },
 };
 
 const jsonLd = {
@@ -61,7 +73,7 @@ const jsonLd = {
   name: site.legalName,
   description: site.description,
   url: site.url,
-  telephone: "+1-215-200-2666",
+  telephone: site.phoneIntl,
   image: `${site.url}/images/hero-reading.jpg`,
   logo: `${site.url}/logo-full.png`,
   address: {
@@ -86,10 +98,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${jakarta.variable} ${instrument.variable}`}>
       <body className="flex min-h-dvh flex-col">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-        />
+        <JsonLd data={[jsonLd, websiteJsonLd]} />
+        <Analytics />
         <Providers>
           <Header />
           <main id="main" className="flex-1">

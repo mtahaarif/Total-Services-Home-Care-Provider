@@ -1,8 +1,8 @@
 /**
  * Single source of truth for business details.
  *
- * Sourced from public records (Nov 2026):
- *  - CMS NPPES NPI Registry, NPI 1124943782 (name, address, phone, President, taxonomy)
+ * Address and phone supplied by the agency (Nov 2026). Other details from public records:
+ *  - CMS NPPES NPI Registry, NPI 1124943782 (name, President, taxonomy)
  *  - AgingCare.com listing (overview text + service list)
  *  - CareAvailability.com listing (5.0 rating from 5 reviews)
  *
@@ -12,13 +12,15 @@ export const site = {
   legalName: "Total Services Home Care Provider, LLC",
   name: "Total Services",
   tagline: "Home Care Provider",
+  /** Kept under 160 characters for search snippets. */
   description:
-    "Total Services Home Care Provider, LLC delivers compassionate, personalized in-home care in Glenolden and across Delaware County, PA — personal care, companionship, meal preparation, medication reminders, respite care and more.",
+    "Compassionate in-home care in Drexel Hill & Delaware County, PA: personal care, companionship, meals, medication reminders and respite care.",
   overview:
     "We work closely with families to create customized care plans that meet each client's unique needs, providing peace of mind and exceptional care every step of the way.",
 
-  phone: "(215) 200-2666",
-  phoneHref: "tel:+12152002666",
+  phone: "(610) 492-6485",
+  phoneHref: "tel:+16104926485",
+  phoneIntl: "+1-610-492-6485",
 
   /** TODO: no public email found. Set one to show it across the site. */
   email: null as string | null,
@@ -27,14 +29,15 @@ export const site = {
   hours: null as { days: string; time: string }[] | null,
 
   address: {
-    street: "904 Poplar Ave",
-    city: "Glenolden",
+    street: "3615 Garrett Rd #1035",
+    streetName: "Garrett Road",
+    city: "Drexel Hill",
     state: "PA",
-    zip: "19036",
+    zip: "19026",
     county: "Delaware County",
   },
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=904+Poplar+Ave%2C+Glenolden%2C+PA+19036",
-  mapsEmbed: "https://www.google.com/maps?q=904+Poplar+Ave,+Glenolden,+PA+19036&z=15&output=embed",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=3615+Garrett+Rd%2C+Drexel+Hill%2C+PA+19026",
+  mapsEmbed: "https://www.google.com/maps?q=3615+Garrett+Rd,+Drexel+Hill,+PA+19026&z=15&output=embed",
 
   president: "Kevin A. Dandridge",
   npi: "1124943782",
@@ -59,36 +62,49 @@ export const site = {
     google: "",
   },
 
-  /** TODO: set NEXT_PUBLIC_SITE_URL once the domain is chosen. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  /**
+   * Canonical origin (always https in production). Resolution order:
+   * NEXT_PUBLIC_SITE_URL (set this once a custom domain is live) →
+   * Vercel's production domain → the current vercel.app deployment.
+   */
+  url: resolveSiteUrl(),
 } as const;
+
+function resolveSiteUrl() {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (vercel) return `https://${vercel}`;
+  if (process.env.NODE_ENV === "development") return "http://localhost:3000";
+  return "https://total-services-home-care-provider.vercel.app";
+}
 
 export const fullAddress = `${site.address.street}, ${site.address.city}, ${site.address.state} ${site.address.zip}`;
 
 /**
- * Nearby communities within a short drive of the Glenolden office.
+ * Nearby communities within a short drive of the Drexel Hill office.
  * TODO: confirm the agency's actual coverage area with the owner.
  */
 export const serviceArea = [
-  "Glenolden",
-  "Folcroft",
-  "Norwood",
-  "Prospect Park",
-  "Ridley Park",
-  "Sharon Hill",
-  "Collingdale",
-  "Darby",
-  "Aldan",
-  "Clifton Heights",
-  "Morton",
-  "Holmes",
-  "Ridley Township",
-  "Lansdowne",
+  "Drexel Hill",
   "Upper Darby",
-  "Swarthmore",
+  "Havertown",
+  "Clifton Heights",
+  "Lansdowne",
+  "East Lansdowne",
+  "Primos",
+  "Secane",
+  "Aldan",
+  "Yeadon",
   "Springfield",
+  "Broomall",
+  "Collingdale",
+  "Glenolden",
+  "Darby",
+  "Morton",
   "Media",
-  "Southwest Philadelphia",
+  "Swarthmore",
+  "West Philadelphia",
 ];
 
 export const nav = [

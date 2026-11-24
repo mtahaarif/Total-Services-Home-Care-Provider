@@ -17,7 +17,7 @@ export function CtaBand({
     <section className="container-x pb-24 sm:pb-32">
       <Reveal scale={0.96} y={40}>
         <div className="grain relative isolate overflow-hidden rounded-[2.5rem] bg-navy-800 px-6 py-16 text-white sm:px-14 sm:py-20">
-          <Image src={image} alt="" fill sizes="100vw" className="-z-20 object-cover opacity-35" />
+          <Image quality={60} src={image} alt="" fill sizes="100vw" className="-z-20 object-cover opacity-35" />
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-navy-950 via-navy-900/90 to-navy-700/40" />
           <div aria-hidden className="absolute -right-20 -top-20 -z-10 size-80 animate-blob rounded-full bg-leaf-400/30 blur-3xl" />
 

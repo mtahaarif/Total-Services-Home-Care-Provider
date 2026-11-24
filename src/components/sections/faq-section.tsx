@@ -5,6 +5,8 @@ import { Accordion } from "@/components/ui/accordion";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ButtonLink } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
+import { JsonLd } from "@/components/seo/json-ld";
+import { faqJsonLd } from "@/lib/seo";
 
 /** Sticky-sidebar FAQ: heading + contact card pin while the questions scroll. */
 export function FaqSection({
@@ -18,6 +20,7 @@ export function FaqSection({
 }) {
   return (
     <section className="py-24 sm:py-32">
+      <JsonLd data={faqJsonLd(items)} />
       <div className="container-x grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <div className="flex flex-col gap-8 lg:sticky lg:top-32">

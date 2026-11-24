@@ -1,5 +1,7 @@
 "use server";
 
+import { site } from "@/lib/site";
+
 export type FormState = {
   status: "idle" | "success" | "error";
   message?: string;
@@ -53,7 +55,7 @@ async function deliver(subject: string, rows: [string, string][], replyTo?: stri
 
 const failure: FormState = {
   status: "error",
-  message: "Sorry — your message couldn't be sent right now. Please call us at (215) 200-2666.",
+  message: `Sorry — your message couldn't be sent right now. Please call us at ${site.phone}.`,
 };
 
 export async function submitContact(_prev: FormState, fd: FormData): Promise<FormState> {

@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
-import { fullAddress, nav, site } from "@/lib/site";
+import { fullAddress, site } from "@/lib/site";
 import { services } from "@/lib/services";
 import { Brand } from "./brand";
 import { Year } from "./year";
+
+/** Descriptive anchors (the header keeps the short labels). */
+const footerLinks = [
+  { href: "/", label: `Home care in ${site.address.city}` },
+  { href: "/about", label: "About our agency" },
+  { href: "/services", label: "All care services" },
+  { href: "/careers", label: "Caregiver jobs" },
+  { href: "/contact", label: "Contact our office" },
+];
 
 const socialLabels: Record<string, string> = {
   facebook: "Facebook",
@@ -42,7 +51,7 @@ export function Footer() {
             <div>
               <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">Explore</h2>
               <ul className="flex flex-col gap-3">
-                {nav.map((item) => (
+                {footerLinks.map((item) => (
                   <li key={item.href}>
                     <Link href={item.href} className="group inline-flex items-center gap-1 text-navy-100/80 transition-colors hover:text-white">
                       {item.label}
@@ -58,7 +67,7 @@ export function Footer() {
                 {services.map((s) => (
                   <li key={s.slug}>
                     <Link href={`/services/${s.slug}`} className="group inline-flex items-center gap-1 text-navy-100/80 transition-colors hover:text-white">
-                      {s.title}
+                      {s.title.includes(" ") ? s.title : `${s.title} care`}
                       <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                     </Link>
                   </li>

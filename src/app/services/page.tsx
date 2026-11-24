@@ -7,14 +7,17 @@ import { ServicesExplorer } from "@/components/services/services-explorer";
 import { Marquee } from "@/components/ui/marquee";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { ButtonLink } from "@/components/ui/button";
+import { JsonLd } from "@/components/seo/json-ld";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Home Care Services",
+export const metadata: Metadata = pageMeta({
+  title: "Home Care Services in Drexel Hill, PA",
   description:
-    "Personal care, mobility and transfer assistance, meal preparation, medication reminders, housekeeping, laundry, companionship and respite care in Glenolden and Delaware County, PA.",
-  alternates: { canonical: "/services" },
-};
+    "Personal care, mobility help, meals, medication reminders, housekeeping, companionship and respite care in Drexel Hill & Delaware County, PA.",
+  path: "/services",
+  image: { url: "/images/mobility.jpg", alt: "Two caregivers helping a senior man stand from his bed" },
+});
 
 const whoWeHelp = [
   "Seniors aging in place",
@@ -30,6 +33,7 @@ const whoWeHelp = [
 export default function ServicesPage() {
   return (
     <PageTransition>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Services", path: "/services" }])} />
       <PageHero
         crumb="Services"
         eyebrow="Care at home"

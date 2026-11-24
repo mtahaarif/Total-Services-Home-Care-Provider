@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, ViewTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import { services, type ServiceCategory } from "@/lib/services";
 import { ServiceIcon } from "@/components/ui/icons";
@@ -25,6 +25,7 @@ function CategorySection({ s, index, onActive }: { s: ServiceCategory; index: nu
           <ViewTransition name={`svc-img-${s.slug}`} share="morph" default="none">
             <div className="relative aspect-[16/8]">
               <Image
+                quality={60}
                 src={s.image}
                 alt={s.imageAlt}
                 fill
@@ -70,7 +71,7 @@ function CategorySection({ s, index, onActive }: { s: ServiceCategory; index: nu
       </Stagger>
 
       <Reveal delay={0.1} className="mt-6 flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-sm font-bold text-navy-900">Often a fit for:</span>
+        <strong className="mr-1 text-sm font-bold text-navy-900">Often a fit for:</strong>
         {s.idealFor.map((t) => (
           <span key={t} className="inline-flex items-center gap-1.5 rounded-full bg-leaf-100 px-3 py-1.5 text-sm font-medium text-leaf-700">
             <Check className="size-3.5" strokeWidth={3} /> {t}
@@ -113,7 +114,7 @@ export function ServicesExplorer() {
                 return (
                   <li key={s.slug} className="relative">
                     {on && (
-                      <motion.span
+                      <m.span
                         layoutId="svc-active"
                         className="absolute inset-0 rounded-2xl bg-white shadow-[0_15px_40px_-25px_rgb(8_26_48/0.45)]"
                         transition={{ type: "spring", stiffness: 380, damping: 34 }}

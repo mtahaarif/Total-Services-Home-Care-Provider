@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
 import { ArrowRight, ArrowUpRight, Phone } from "lucide-react";
 import { services, type ServiceCategory } from "@/lib/services";
 import { site } from "@/lib/site";
@@ -17,6 +17,7 @@ function ServiceCard({ s, index, className = "" }: { s: ServiceCategory; index: 
       className={`group relative isolate flex shrink-0 flex-col justify-between overflow-hidden rounded-[2rem] bg-navy-900 p-6 text-white shadow-[0_30px_60px_-30px_rgb(8_26_48/0.6)] ${className}`}
     >
       <Image
+        quality={60}
         src={s.image}
         alt={s.imageAlt}
         fill
@@ -82,11 +83,14 @@ export function HorizontalServices() {
   const [distance, setDistance] = useState(0);
   const dist = useMotionValue(0);
 
+  const isDesktop = useSyncExternalStore(subscribeDesktop, () => window.matchMedia(DESKTOP).matches, () => false);
+
   useEffect(() => {
     const el = track.current;
     if (!el) return;
     const measure = () => {
-      const d = Math.max(0, el.scrollWidth - window.innerWidth);
+      // Only desktop pins + translates; mobile uses native horizontal scrolling.
+      const d = window.matchMedia(DESKTOP).matches ? Math.max(0, el.scrollWidth - window.innerWidth) : 0;
       setDistance(d);
       dist.set(d);
     };
@@ -98,66 +102,63 @@ export function HorizontalServices() {
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [dist]);
+  }, [dist, isDesktop]);
 
   const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 });
   const x = useTransform(() => -smooth.get() * dist.get());
   const bar = useTransform(smooth, [0, 1], [0.04, 1]);
 
+  /*
+   * One DOM for every breakpoint (no duplicated headings/cards):
+   *  - desktop: vertical scroll drives a pinned, horizontally translating track
+   *  - mobile/tablet: native swipe carousel with snap points
+   */
   return (
-    <>
-      {/* Desktop: vertical scroll drives a pinned horizontal track */}
-      <section
-        ref={section}
-        aria-label="Our services"
-        className="relative hidden bg-cream lg:block"
-        style={{ height: `calc(100vh + ${distance}px)` }}
-      >
-        <div className="sticky top-0 flex h-screen flex-col justify-center gap-10 overflow-hidden pt-16">
-          <div className="container-x flex items-end justify-between gap-10">
-            <SectionHeading
-              eyebrow="What we offer"
-              title="Care that comes *to you.*"
-              description="Six areas of everyday support — mixed and matched into one plan that fits your loved one."
-            />
-            <div className="flex w-64 shrink-0 flex-col gap-3 pb-3">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-navy-500">Scroll to explore</span>
-              <div className="h-1 overflow-hidden rounded-full bg-navy-100">
-                <motion.div style={{ scaleX: bar }} className="h-full origin-left rounded-full bg-gradient-to-r from-navy-500 to-leaf-400" />
-              </div>
-            </div>
-          </div>
-
-          <motion.div
-            ref={track}
-            style={{ x }}
-            className="flex w-max gap-6 pl-[max(2rem,calc((100vw-82rem)/2+2rem))] pr-[max(2rem,calc((100vw-82rem)/2+2rem))]"
-          >
-            {services.map((s, i) => (
-              <ServiceCard key={s.slug} s={s} index={i} className="h-[min(34rem,60vh)] w-[24rem] xl:w-[26rem]" />
-            ))}
-            <CtaCard className="h-[min(34rem,60vh)] w-[22rem]" />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Mobile / tablet: native swipe carousel with snap points */}
-      <section aria-label="Our services" className="py-20 lg:hidden">
-        <div className="container-x">
+    <section
+      ref={section}
+      aria-label="Our services"
+      className="relative bg-cream py-20 lg:py-0"
+      style={isDesktop ? { height: `calc(100vh + ${distance}px)` } : undefined}
+    >
+      <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:justify-center lg:gap-10 lg:overflow-hidden lg:pt-16">
+        <div className="container-x flex items-end justify-between gap-10">
           <SectionHeading
             eyebrow="What we offer"
             title="Care that comes *to you.*"
             description="Six areas of everyday support — mixed and matched into one plan that fits your loved one."
           />
+          <div className="hidden w-64 shrink-0 flex-col gap-3 pb-3 lg:flex">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-navy-500">Scroll to explore</span>
+            <div className="h-1 overflow-hidden rounded-full bg-navy-100">
+              <m.div style={{ scaleX: bar }} className="h-full origin-left rounded-full bg-gradient-to-r from-navy-500 to-leaf-400" />
+            </div>
+          </div>
         </div>
-        <div className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 sm:scroll-px-6 sm:px-6">
+
+        <m.div
+          ref={track}
+          style={isDesktop ? { x } : undefined}
+          className="no-scrollbar mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 sm:scroll-px-6 sm:px-6 lg:mt-0 lg:w-max lg:snap-none lg:gap-6 lg:overflow-visible lg:pb-0 lg:pl-[max(2rem,calc((100vw-82rem)/2+2rem))] lg:pr-[max(2rem,calc((100vw-82rem)/2+2rem))]"
+        >
           {services.map((s, i) => (
-            <ServiceCard key={s.slug} s={s} index={i} className="h-[30rem] w-[82vw] max-w-[24rem] snap-start" />
+            <ServiceCard
+              key={s.slug}
+              s={s}
+              index={i}
+              className="h-[30rem] w-[82vw] max-w-[24rem] snap-start lg:h-[min(34rem,60vh)] lg:w-[24rem] lg:max-w-none xl:w-[26rem]"
+            />
           ))}
-          <CtaCard className="h-[30rem] w-[82vw] max-w-[22rem] snap-start" />
-        </div>
-      </section>
-    </>
+          <CtaCard className="h-[30rem] w-[82vw] max-w-[22rem] snap-start lg:h-[min(34rem,60vh)] lg:w-[22rem]" />
+        </m.div>
+      </div>
+    </section>
   );
+}
+
+const DESKTOP = "(min-width: 1024px)";
+function subscribeDesktop(cb: () => void) {
+  const mq = window.matchMedia(DESKTOP);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
 }

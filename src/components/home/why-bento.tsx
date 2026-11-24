@@ -30,7 +30,7 @@ export function WhyBento() {
           <StaggerItem className="md:col-span-4 md:row-span-2">
             <SpotlightCard className={`${card} flex flex-col justify-end !p-0`}>
               <div className="relative h-full min-h-[24rem]">
-                <Image src="/images/medication.jpg" alt="Caregiver sitting with a senior man reviewing his medication" fill sizes="(min-width:768px) 55vw, 100vw" className="object-cover opacity-70" />
+                <Image quality={60} src="/images/medication.jpg" alt="Caregiver sitting with a senior man reviewing his medication" fill sizes="(min-width:768px) 55vw, 100vw" className="object-cover opacity-70" />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/60 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9">
                   <span className="glass-dark mb-5 inline-grid size-12 place-items-center rounded-2xl text-leaf-300">
@@ -84,7 +84,7 @@ export function WhyBento() {
               <MapPin className="size-6 text-leaf-300" />
               <h3 className="mt-6 text-xl font-bold">Rooted in {site.address.city}</h3>
               <p className="mt-2 leading-relaxed text-white/70">
-                Our office is on {site.address.street.replace(/^\d+\s/, "")} — your neighbors, caring for {site.address.county}.
+                Our office is on {site.address.streetName} — your neighbors, caring for {site.address.county}.
               </p>
             </SpotlightCard>
           </StaggerItem>

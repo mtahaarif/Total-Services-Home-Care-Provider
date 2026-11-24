@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion, useInView } from "motion/react";
+import { AnimatePresence, m, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -49,7 +49,7 @@ function Item({ i, active, onActive }: { i: number; active: boolean; onActive: (
   return (
     <li ref={ref} className="flex min-h-[60vh] flex-col justify-center py-10 lg:min-h-[70vh]">
       <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[2rem] lg:hidden">
-        <Image src={it.image} alt={it.alt} fill sizes="100vw" className="object-cover" />
+        <Image quality={60} src={it.image} alt={it.alt} fill sizes="100vw" className="object-cover" />
       </div>
       <span className={cn("font-serif text-3xl italic transition-colors duration-500", active ? "text-leaf-500" : "text-navy-200")}>0{i + 1}</span>
       <h3 className={cn("mt-2 text-3xl font-extrabold tracking-tight transition-colors duration-500 sm:text-4xl", active ? "text-navy-950" : "text-navy-950/30")}>
@@ -69,7 +69,7 @@ export function StickyStory() {
       <div className="hidden lg:block">
         <div className="sticky top-28 h-[calc(100vh-9rem)] overflow-hidden rounded-[2.5rem] shadow-[0_40px_80px_-40px_rgb(8_26_48/0.5)]">
           <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
+            <m.div
               key={active}
               initial={{ opacity: 0, scale: 1.12, clipPath: "inset(100% 0% 0% 0%)" }}
               animate={{ opacity: 1, scale: 1, clipPath: "inset(0% 0% 0% 0%)" }}
@@ -77,8 +77,9 @@ export function StickyStory() {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="absolute inset-0"
             >
-              <Image src={items[active].image} alt={items[active].alt} fill sizes="50vw" className="object-cover" />
-            </motion.div>
+              {/* Decorative duplicate of the per-item photo (which carries the alt text). */}
+              <Image quality={60} src={items[active].image} alt="" fill sizes="50vw" className="object-cover" />
+            </m.div>
           </AnimatePresence>
           <div className="absolute inset-0 bg-gradient-to-t from-navy-950/50 to-transparent" />
           <div className="glass absolute bottom-6 left-6 right-6 flex items-center justify-between rounded-2xl px-5 py-4">

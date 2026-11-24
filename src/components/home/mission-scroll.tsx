@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
+import { m, useScroll, useTransform, type MotionValue } from "motion/react";
 import { site } from "@/lib/site";
 import { Eyebrow } from "@/components/ui/section-heading";
 
@@ -21,9 +21,9 @@ function Word({
   const y = useTransform(progress, range, [6, 0]);
   return (
     <span className="relative mr-[0.25em] inline-block">
-      <motion.span style={{ opacity, y }} className={accent ? "inline-block font-serif font-normal italic text-navy-500" : "inline-block"}>
+      <m.span style={{ opacity, y }} className={accent ? "inline-block font-serif font-normal italic text-navy-500" : "inline-block"}>
         {children}
-      </motion.span>
+      </m.span>
     </span>
   );
 }
@@ -69,12 +69,12 @@ export function MissionScroll() {
           </p>
 
           <div className="mt-16 grid grid-cols-2 gap-4 sm:gap-6">
-            <motion.div style={{ y: imgY1, rotate }} className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-xl">
-              <Image src="/images/hands.jpg" alt="Two people holding hands in reassurance" fill sizes="(min-width:1024px) 30vw, 50vw" className="object-cover" />
-            </motion.div>
-            <motion.div style={{ y: imgY2 }} className="relative mt-16 aspect-[4/3] overflow-hidden rounded-[2rem] shadow-xl">
-              <Image src="/images/family.jpg" alt="Family members smiling with a senior man at the table" fill sizes="(min-width:1024px) 30vw, 50vw" className="object-cover" />
-            </motion.div>
+            <m.div style={{ y: imgY1, rotate }} className="relative aspect-[4/3] overflow-hidden rounded-[2rem] shadow-xl">
+              <Image quality={60} src="/images/hands.jpg" alt="Two people holding hands in reassurance" fill sizes="(min-width:1024px) 30vw, 50vw" className="object-cover" />
+            </m.div>
+            <m.div style={{ y: imgY2 }} className="relative mt-16 aspect-[4/3] overflow-hidden rounded-[2rem] shadow-xl">
+              <Image quality={60} src="/images/family.jpg" alt="Family members smiling with a senior man at the table" fill sizes="(min-width:1024px) 30vw, 50vw" className="object-cover" />
+            </m.div>
           </div>
         </div>
       </div>

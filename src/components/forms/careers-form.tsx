@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { CircleCheckBig, LoaderCircle, Send } from "lucide-react";
 import { submitApplication } from "@/app/actions";
 import { buttonClass } from "@/components/ui/button";
@@ -16,26 +16,26 @@ export function CareersForm() {
   return (
     <AnimatePresence mode="wait" initial={false}>
       {state.status === "success" ? (
-        <motion.div
+        <m.div
           key="done"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           role="status"
           className="flex min-h-[26rem] flex-col items-center justify-center gap-4 text-center"
         >
-          <motion.span
+          <m.span
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 260, damping: 16 }}
             className="grid size-20 place-items-center rounded-full bg-leaf-400 text-navy-950"
           >
             <CircleCheckBig className="size-9" />
-          </motion.span>
+          </m.span>
           <h3 className="text-3xl font-extrabold text-navy-950">Application received</h3>
           <p className="max-w-sm text-muted">{state.message}</p>
-        </motion.div>
+        </m.div>
       ) : (
-        <motion.form key="form" exit={{ opacity: 0 }} onSubmit={onSubmit} noValidate className="relative flex flex-col gap-4">
+        <m.form key="form" method="post" exit={{ opacity: 0 }} onSubmit={onSubmit} noValidate className="relative flex flex-col gap-4">
           <Honeypot />
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="First name *" name="firstName" autoComplete="given-name" error={e.firstName} />
@@ -67,7 +67,7 @@ export function CareersForm() {
               </>
             )}
           </button>
-        </motion.form>
+        </m.form>
       )}
     </AnimatePresence>
   );

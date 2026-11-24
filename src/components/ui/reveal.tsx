@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type HTMLMotionProps, type Variants } from "motion/react";
+import { m, type HTMLMotionProps, type Variants } from "motion/react";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -15,7 +15,7 @@ type RevealProps = HTMLMotionProps<"div"> & {
 /** Fades + lifts its children into view once, when scrolled into the viewport. */
 export function Reveal({ children, delay = 0, y = 32, x = 0, scale = 1, blur = false, ...rest }: RevealProps) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y, x, scale, filter: blur ? "blur(8px)" : "blur(0px)" }}
       whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
       viewport={{ once: true, margin: "0px 0px -80px 0px" }}
@@ -23,7 +23,7 @@ export function Reveal({ children, delay = 0, y = 32, x = 0, scale = 1, blur = f
       {...rest}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -40,7 +40,7 @@ const item: Variants = {
 /** Parent that staggers its <StaggerItem> children as they enter the viewport. */
 export function Stagger({ children, stagger = 0.08, ...rest }: HTMLMotionProps<"div"> & { stagger?: number }) {
   return (
-    <motion.div
+    <m.div
       variants={container}
       custom={stagger}
       initial="hidden"
@@ -49,14 +49,14 @@ export function Stagger({ children, stagger = 0.08, ...rest }: HTMLMotionProps<"
       {...rest}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
 export function StaggerItem({ children, ...rest }: HTMLMotionProps<"div">) {
   return (
-    <motion.div variants={item} {...rest}>
+    <m.div variants={item} {...rest}>
       {children}
-    </motion.div>
+    </m.div>
   );
 }

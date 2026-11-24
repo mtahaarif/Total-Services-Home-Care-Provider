@@ -7,20 +7,24 @@ import { ContactForm } from "@/components/forms/contact-form";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
+import { JsonLd } from "@/components/seo/json-ld";
 import { faqs } from "@/lib/content";
+import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { fullAddress, site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: `Call ${site.phone} or send a message to ${site.legalName}, ${fullAddress}.`,
-  alternates: { canonical: "/contact" },
-};
+export const metadata: Metadata = pageMeta({
+  title: "Contact Our Home Care Team",
+  description: `Call ${site.phone} or send a message to Total Services Home Care Provider, ${fullAddress}.`,
+  path: "/contact",
+  image: { url: "/images/couple-walk.jpg", alt: "Senior couple walking hand in hand along a city street" },
+});
 
 const lightSpot = { spot: "rgb(42 99 153 / 0.10)", spotBorder: "rgb(42 99 153 / 0.55)" };
 
 export default function ContactPage() {
   return (
     <PageTransition>
+      <JsonLd data={breadcrumbJsonLd([{ name: "Contact", path: "/contact" }])} />
       <PageHero
         crumb="Contact"
         eyebrow="We're here to help"
@@ -48,7 +52,7 @@ export default function ContactPage() {
                       </span>
                       <div>
                         <p className="text-sm font-semibold text-leaf-300">Call us</p>
-                        <p className="text-2xl font-extrabold sm:text-3xl">{site.phone}</p>
+                        <p className="text-2xl sm:text-3xl"><strong className="font-extrabold">{site.phone}</strong></p>
                       </div>
                     </div>
                   </SpotlightCard>

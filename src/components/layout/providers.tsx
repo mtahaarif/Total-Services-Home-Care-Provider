@@ -3,7 +3,7 @@
 import { useEffect, useSyncExternalStore, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { ReactLenis, useLenis } from "lenis/react";
-import { MotionConfig, motion, useScroll, useSpring } from "motion/react";
+import { LazyMotion, MotionConfig, m, useScroll, useSpring } from "motion/react";
 
 function ScrollReset() {
   const pathname = usePathname();
@@ -19,7 +19,7 @@ function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.3 });
   return (
-    <motion.div
+    <m.div
       aria-hidden
       className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-gradient-to-r from-leaf-400 via-leaf-300 to-navy-400"
       style={{ scaleX }}
@@ -42,16 +42,23 @@ export function Providers({ children }: { children: ReactNode }) {
   );
 
   return (
-    <MotionConfig reducedMotion="user">
-      {reduce ? (
-        children
-      ) : (
-        <ReactLenis root options={{ lerp: 0.11, wheelMultiplier: 1, anchors: { offset: -110 }, autoRaf: true }}>
-          <ScrollReset />
-          {children}
-        </ReactLenis>
-      )}
-      <ScrollProgress />
-    </MotionConfig>
+    // Animation features (incl. layout animations for the nav pills) load in a
+    // separate chunk after first paint, keeping them out of the LCP path.
+    // `strict` makes any stray full-size `motion.*` component throw in dev.
+    <LazyMotion features={loadFeatures} strict>
+      <MotionConfig reducedMotion="user">
+        {reduce ? (
+          children
+        ) : (
+          <ReactLenis root options={{ lerp: 0.11, wheelMultiplier: 1, anchors: { offset: -110 }, autoRaf: true }}>
+            <ScrollReset />
+            {children}
+          </ReactLenis>
+        )}
+        <ScrollProgress />
+      </MotionConfig>
+    </LazyMotion>
   );
 }
+
+const loadFeatures = () => import("@/lib/motion-features").then((mod) => mod.default);

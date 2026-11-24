@@ -1,11 +1,15 @@
 "use client";
 
 import { useId, useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import { Plus } from "lucide-react";
 import type { Faq } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
+/**
+ * Every answer is always in the HTML (crawlers, AI answer engines and
+ * find-in-page all see it). Collapsed answers are animated closed with CSS
+ * grid rows and made `inert` so keyboard users skip them.
+ */
 export function Accordion({ items, dark = false, defaultOpen = 0 }: { items: Faq[]; dark?: boolean; defaultOpen?: number | null }) {
   const [open, setOpen] = useState<number | null>(defaultOpen);
   const id = useId();
@@ -47,21 +51,20 @@ export function Accordion({ items, dark = false, defaultOpen = 0 }: { items: Faq
                 </span>
               </button>
             </h3>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  id={`${id}-a-${i}`}
-                  role="region"
-                  aria-labelledby={`${id}-q-${i}`}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <p className={cn("px-6 pb-6 leading-relaxed sm:px-7", dark ? "text-navy-100/75" : "text-muted")}>{item.a}</p>
-                </motion.div>
+            <div
+              id={`${id}-a-${i}`}
+              role="region"
+              aria-labelledby={`${id}-q-${i}`}
+              inert={!isOpen}
+              className={cn(
+                "grid transition-[grid-template-rows,opacity] duration-500 ease-out-expo",
+                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
               )}
-            </AnimatePresence>
+            >
+              <div className="overflow-hidden">
+                <p className={cn("px-6 pb-6 leading-relaxed sm:px-7", dark ? "text-navy-100/75" : "text-muted")}>{item.a}</p>
+              </div>
+            </div>
           </li>
         );
       })}

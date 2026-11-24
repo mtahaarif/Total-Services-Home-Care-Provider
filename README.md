@@ -23,7 +23,9 @@ npm run build && npm start
 - **Social profiles** (`site.socials`) — none exist yet; links appear in the footer when added.
 - **Service area** (`serviceArea`) — nearby towns listed as a starting point; confirm real coverage.
 - **Testimonials** (`testimonials`) — add real reviews you have permission to publish; they replace the "commitments" wall on the home page.
-- **Domain** — set `NEXT_PUBLIC_SITE_URL` (used for canonical URLs, sitemap, JSON-LD).
+- **Domain** — when a custom domain goes live, set `NEXT_PUBLIC_SITE_URL=https://www.yourdomain.com` in Vercel. Until then canonicals, `og:url`, the sitemap and JSON-LD use Vercel's production domain automatically (`VERCEL_PROJECT_PRODUCTION_URL`), falling back to `https://total-services-home-care-provider.vercel.app`.
+- **Analytics** — set `NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX` to load Google Tag Manager on every page (configure GA4 inside GTM). The CSP already allows Google's tag/analytics domains.
+- **Search Console** — verify the domain in Google Search Console and submit `/sitemap.xml`.
 - **Real photos** of the team/office would beat stock photos — drop them into `public/images/` with the same filenames.
 
 ### Contact & careers forms
@@ -36,6 +38,15 @@ CONTACT_FROM_EMAIL="Total Services Website <noreply@yourdomain.com>"   # verifie
 ```
 
 Without them, submissions are logged to the console in development and the form shows a "please call us" error in production, so leads are never silently lost.
+
+## SEO & performance notes
+- Every page builds full metadata with `pageMeta()` (`src/lib/seo.ts`): self-referencing HTTPS canonical, `og:url`, title ≤ 60 chars, description ≤ 155 chars. Next merges metadata shallowly, so never set only `description` on a page.
+- Structured data: `LocalBusiness` + `WebSite` (all pages), `BreadcrumbList` (inner pages), `Service` (service pages), `FAQPage` (any FAQ section).
+- `/llms.txt` is generated from the same data for AI answer engines.
+- FAQ answers stay in the HTML when collapsed (crawlable); avoid conditionally rendering content.
+- Hero headlines must stay visible on first paint (`AnimatedHeadline immediate`) — hiding them, even briefly, delays LCP.
+- Motion uses `LazyMotion` + `m.*` components; animation features load after first paint. Use `m.div`, never `motion.div` (strict mode throws).
+- Security headers (CSP, X-Frame-Options, nosniff, HSTS, Referrer/Permissions-Policy) are set in `next.config.ts`. Add any new third-party domain to the CSP there.
 
 ## Motion & UI techniques used
 - **Page transitions** — React `<ViewTransition>` (soft fade/rise) + shared-element image morph from `/services` cards into `/services/[slug]` heroes.
