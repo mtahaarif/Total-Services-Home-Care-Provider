@@ -1,16 +1,17 @@
 import Link from "next/link";
-import { ArrowUpRight, Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { fullAddress, site } from "@/lib/site";
 import { services } from "@/lib/services";
 import { Brand } from "./brand";
 import { Year } from "./year";
 
 /** Descriptive anchors (the header keeps the short labels). */
-const footerLinks = [
+const company = [
   { href: "/", label: `Home care in ${site.address.city}` },
   { href: "/about", label: "About our agency" },
   { href: "/services", label: "All care services" },
   { href: "/careers", label: "Caregiver jobs" },
+  { href: "/faq", label: "Frequently asked questions" },
   { href: "/contact", label: "Contact our office" },
 ];
 
@@ -21,24 +22,25 @@ const socialLabels: Record<string, string> = {
   google: "Google",
 };
 
+const heading = "mb-4 text-sm font-bold text-navy-900";
+const link = "text-[15px] text-navy-900/65 transition-colors hover:text-navy-600";
+
+/** Minimal footer on the logo's light blue. */
 export function Footer() {
   const socials = Object.entries(site.socials).filter(([, url]) => url);
 
   return (
-    <footer className="grain relative overflow-hidden bg-navy-950 text-white">
-      <div aria-hidden className="bg-grid-dark pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_at_top,#000_20%,transparent_70%)]" />
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[60rem] -translate-x-1/2 rounded-full bg-navy-500/30 blur-[120px]" />
-
-      <div className="container-x relative z-10 pt-20">
+    <footer className="cv-auto border-t border-navy-100 bg-navy-50 [contain-intrinsic-size:auto_860px] lg:[contain-intrinsic-size:auto_470px]">
+      <div className="container-x py-16">
         <div className="grid gap-12 lg:grid-cols-12">
-          <div className="flex flex-col gap-6 lg:col-span-4">
-            <Brand dark />
-            <p className="max-w-sm leading-relaxed text-navy-100/70">{site.overview}</p>
+          <div className="flex flex-col gap-5 lg:col-span-4">
+            <Brand />
+            <p className="max-w-sm text-[15px] leading-relaxed text-navy-900/65">{site.overview}</p>
             {socials.length > 0 && (
               <ul className="flex gap-2">
                 {socials.map(([key, url]) => (
                   <li key={key}>
-                    <a href={url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/15 px-4 py-2 text-sm hover:bg-white hover:text-navy-950">
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="rounded-full border border-navy-200 px-4 py-2 text-sm text-navy-800 hover:bg-white">
                       {socialLabels[key]}
                     </a>
                   </li>
@@ -49,56 +51,54 @@ export function Footer() {
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
             <div>
-              <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">Explore</h2>
-              <ul className="flex flex-col gap-3">
-                {footerLinks.map((item) => (
-                  <li key={item.href}>
-                    <Link href={item.href} className="group inline-flex items-center gap-1 text-navy-100/80 transition-colors hover:text-white">
-                      {item.label}
-                      <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+              <h2 className={heading}>Care services</h2>
+              <ul className="flex flex-col gap-2.5">
+                {services.map((s) => (
+                  <li key={s.slug}>
+                    <Link href={`/services/${s.slug}`} className={link}>
+                      {s.title.includes(" ") ? s.title : `${s.title} care`}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">Care services</h2>
-              <ul className="flex flex-col gap-3">
-                {services.map((s) => (
-                  <li key={s.slug}>
-                    <Link href={`/services/${s.slug}`} className="group inline-flex items-center gap-1 text-navy-100/80 transition-colors hover:text-white">
-                      {s.title.includes(" ") ? s.title : `${s.title} care`}
-                      <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+              <h2 className={heading}>Company</h2>
+              <ul className="flex flex-col gap-2.5">
+                {company.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className={link}>
+                      {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="col-span-2 sm:col-span-1">
-              <h2 className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">Get in touch</h2>
-              <ul className="flex flex-col gap-4 text-navy-100/80">
+              <h2 className={heading}>Contact</h2>
+              <ul className="flex flex-col gap-3 text-[15px] text-navy-900/65">
                 <li>
-                  <a href={site.phoneHref} className="flex items-start gap-3 hover:text-white">
-                    <Phone className="mt-0.5 size-4 shrink-0 text-leaf-300" />
+                  <a href={site.phoneHref} className="flex items-start gap-2.5 font-semibold text-navy-800 hover:text-navy-600">
+                    <Phone className="mt-1 size-4 shrink-0 text-navy-400" />
                     {site.phone}
                   </a>
                 </li>
                 {site.email && (
                   <li>
-                    <a href={`mailto:${site.email}`} className="flex items-start gap-3 hover:text-white">
-                      <Mail className="mt-0.5 size-4 shrink-0 text-leaf-300" />
+                    <a href={`mailto:${site.email}`} className="flex items-start gap-2.5 hover:text-navy-600">
+                      <Mail className="mt-1 size-4 shrink-0 text-navy-400" />
                       {site.email}
                     </a>
                   </li>
                 )}
                 <li>
-                  <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 hover:text-white">
-                    <MapPin className="mt-0.5 size-4 shrink-0 text-leaf-300" />
+                  <a href={site.mapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2.5 hover:text-navy-600">
+                    <MapPin className="mt-1 size-4 shrink-0 text-navy-400" />
                     {fullAddress}
                   </a>
                 </li>
-                <li className="flex items-start gap-3">
-                  <Clock className="mt-0.5 size-4 shrink-0 text-leaf-300" />
+                <li className="flex items-start gap-2.5">
+                  <Clock className="mt-1 size-4 shrink-0 text-navy-400" />
                   {site.hours ? site.hours.map((h) => `${h.days}: ${h.time}`).join(" · ") : "Call for availability"}
                 </li>
               </ul>
@@ -106,7 +106,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-white/10 py-6 text-sm text-navy-100/60 md:flex-row md:items-center md:justify-between">
+        <div className="mt-14 flex flex-col gap-2 border-t border-navy-200/70 pt-6 text-sm text-navy-900/55 md:flex-row md:items-center md:justify-between">
           <p>
             © <Year /> {site.legalName}. All rights reserved.
           </p>
@@ -115,12 +115,6 @@ export function Footer() {
             <span>Proudly serving {site.address.county}, PA</span>
           </p>
         </div>
-      </div>
-
-      <div aria-hidden className="relative z-10 select-none overflow-hidden">
-        <p className="text-gradient-light translate-y-[22%] whitespace-nowrap text-center text-[14.5vw] font-extrabold leading-none tracking-tighter opacity-[0.12]">
-          Total Services
-        </p>
       </div>
     </footer>
   );

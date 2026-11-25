@@ -1,5 +1,5 @@
 import { faqs } from "@/lib/content";
-import { services } from "@/lib/services";
+import { serviceHref, services } from "@/lib/services";
 import { fullAddress, serviceArea, site } from "@/lib/site";
 
 /**
@@ -26,12 +26,13 @@ ${site.email ? `- Email: ${site.email}\n` : ""}
 - [About](${u("/about")}): Who we are, our values and how we work with families.
 - [Services](${u("/services")}): All home care services, grouped into six categories.
 - [Careers](${u("/careers")}): Caregiver and home care aide jobs, and the online application.
+- [FAQ](${u("/faq")}): Answers about getting started, services, scheduling, payment and caregivers.
 - [Contact](${u("/contact")}): Phone, address, map and contact form.
 
 ## Services
 
 ${services
-  .map((s) => `- [${s.title}](${u(`/services/${s.slug}`)}): ${s.metaDescription} Includes: ${s.items.map((i) => i.name).join(", ")}.`)
+  .map((s) => `- [${s.title}](${u(serviceHref(s.slug))}): ${s.metaDescription} Includes: ${s.items.map((i) => i.name).join(", ")}.`)
   .join("\n")}
 
 ## Frequently asked questions

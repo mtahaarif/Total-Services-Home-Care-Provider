@@ -3,12 +3,13 @@ import { fullAddress, serviceArea, site } from "@/lib/site";
 import { Marquee } from "@/components/ui/marquee";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
+import { MapEmbed } from "@/components/ui/map-embed";
 import { ButtonLink } from "@/components/ui/button";
 
 export function ServiceArea() {
   const half = Math.ceil(serviceArea.length / 2);
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-cream via-navy-50 to-cream py-24 sm:py-32">
+    <section className="cv-auto relative overflow-hidden [contain-intrinsic-size:auto_1150px] lg:[contain-intrinsic-size:auto_780px] py-24 sm:py-32">
       <div className="container-x grid items-center gap-14 lg:grid-cols-2">
         <div className="flex min-w-0 flex-col gap-8">
           <SectionHeading
@@ -41,13 +42,7 @@ export function ServiceArea() {
 
         <Reveal scale={0.94} className="relative">
           <div className="relative overflow-hidden rounded-[2.5rem] border-[6px] border-white shadow-[0_40px_80px_-40px_rgb(8_26_48/0.5)]">
-            <iframe
-              title={`Map showing ${fullAddress}`}
-              src={site.mapsEmbed}
-              className="block h-[26rem] w-full grayscale-[35%] sm:h-[32rem]"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            <MapEmbed showAddress={false} className="h-[26rem] sm:h-[32rem]" />
           </div>
           <div className="glass absolute -bottom-6 left-4 right-4 flex items-center gap-4 rounded-3xl p-4 sm:left-auto sm:right-8 sm:w-80">
             <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-leaf-400 text-navy-950">

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { m, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Phone } from "lucide-react";
 import { services, type ServiceCategory } from "@/lib/services";
 import { site } from "@/lib/site";
@@ -31,7 +31,7 @@ function ServiceCard({ s, index, className = "" }: { s: ServiceCategory; index: 
         <span className="glass-dark grid size-12 place-items-center rounded-2xl text-leaf-300">
           <ServiceIcon icon={s.icon} className="size-5" />
         </span>
-        <span className="font-serif text-xl italic text-white/70">
+        <span className="text-xl text-white/70">
           {String(index + 1).padStart(2, "0")}
           <span className="text-white/35"> / {String(services.length).padStart(2, "0")}</span>
         </span>
@@ -62,8 +62,8 @@ function ServiceCard({ s, index, className = "" }: { s: ServiceCategory; index: 
 function CtaCard({ className = "" }: { className?: string }) {
   return (
     <div className={`relative flex shrink-0 flex-col justify-between overflow-hidden rounded-[2rem] bg-leaf-400 p-7 text-navy-950 ${className}`}>
-      <div aria-hidden className="absolute -right-16 -top-16 size-56 rounded-full bg-leaf-200 blur-2xl" />
-      <p className="relative font-serif text-2xl italic">Not sure where to start?</p>
+      <div aria-hidden className="absolute -right-16 -top-16 size-56 rounded-full bg-leaf-200 soft-glow" />
+      <p className="relative text-2xl">Not sure where to start?</p>
       <div className="relative flex flex-col gap-5">
         <p className="text-3xl font-extrabold leading-tight tracking-tight">We&apos;ll help you figure out exactly what&apos;s needed.</p>
         <a href={site.phoneHref} className="inline-flex w-fit items-center gap-2 rounded-full bg-navy-950 px-5 py-3 text-sm font-bold text-white transition-transform hover:scale-105">

@@ -1,62 +1,39 @@
-"use client";
+import type { CSSProperties, HTMLAttributes } from "react";
 
-import { m, type HTMLMotionProps, type Variants } from "motion/react";
+/*
+ * Scroll-triggered entrances rendered as plain markup (server components).
+ * The animation itself is CSS (globals.css) toggled by one shared
+ * IntersectionObserver (lib/reveal-script.ts) — no per-element JavaScript,
+ * no hydration cost, no animation library.
+ */
 
-const ease = [0.16, 1, 0.3, 1] as const;
-
-type RevealProps = HTMLMotionProps<"div"> & {
+type RevealProps = HTMLAttributes<HTMLDivElement> & {
+  /** Seconds before the entrance starts. */
   delay?: number;
+  /** Starting vertical offset in px (default 32). */
   y?: number;
+  /** Starting horizontal offset in px. */
   x?: number;
+  /** Starting scale (e.g. 0.95). */
   scale?: number;
-  blur?: boolean;
 };
 
 /** Fades + lifts its children into view once, when scrolled into the viewport. */
-export function Reveal({ children, delay = 0, y = 32, x = 0, scale = 1, blur = false, ...rest }: RevealProps) {
-  return (
-    <m.div
-      initial={{ opacity: 0, y, x, scale, filter: blur ? "blur(8px)" : "blur(0px)" }}
-      whileInView={{ opacity: 1, y: 0, x: 0, scale: 1, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-      transition={{ duration: 0.9, ease, delay }}
-      {...rest}
-    >
-      {children}
-    </m.div>
-  );
+export function Reveal({ delay = 0, y = 32, x = 0, scale = 1, style, ...rest }: RevealProps) {
+  const vars: Record<string, string> = {};
+  if (delay) vars["--d"] = `${delay}s`;
+  if (y !== 32) vars["--ay"] = `${y}px`;
+  if (x) vars["--ax"] = `${x}px`;
+  if (scale !== 1) vars["--as"] = String(scale);
+  return <div data-animate="" style={{ ...vars, ...style } as CSSProperties} {...rest} />;
 }
 
-const container: Variants = {
-  hidden: {},
-  show: (stagger: number = 0.08) => ({ transition: { staggerChildren: stagger, delayChildren: 0.05 } }),
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
-};
-
-/** Parent that staggers its <StaggerItem> children as they enter the viewport. */
-export function Stagger({ children, stagger = 0.08, ...rest }: HTMLMotionProps<"div"> & { stagger?: number }) {
-  return (
-    <m.div
-      variants={container}
-      custom={stagger}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "0px 0px -60px 0px" }}
-      {...rest}
-    >
-      {children}
-    </m.div>
-  );
+/** Parent whose <StaggerItem> children enter one after another. */
+export function Stagger({ stagger = 0.08, style, ...rest }: HTMLAttributes<HTMLDivElement> & { stagger?: number }) {
+  const vars = stagger !== 0.08 ? { "--st": `${stagger * 1000}ms` } : {};
+  return <div data-stagger="" style={{ ...vars, ...style } as CSSProperties} {...rest} />;
 }
 
-export function StaggerItem({ children, ...rest }: HTMLMotionProps<"div">) {
-  return (
-    <m.div variants={item} {...rest}>
-      {children}
-    </m.div>
-  );
+export function StaggerItem(props: HTMLAttributes<HTMLDivElement>) {
+  return <div data-animate-child="" {...props} />;
 }

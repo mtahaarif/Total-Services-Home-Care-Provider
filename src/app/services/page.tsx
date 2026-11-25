@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Phone } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
-import { PageHero } from "@/components/sections/page-hero";
+import { Banner } from "@/components/sections/banner";
 import { CtaBand } from "@/components/sections/cta-band";
 import { ServicesExplorer } from "@/components/services/services-explorer";
 import { Marquee } from "@/components/ui/marquee";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { ButtonLink } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -34,22 +32,19 @@ export default function ServicesPage() {
   return (
     <PageTransition>
       <JsonLd data={breadcrumbJsonLd([{ name: "Services", path: "/services" }])} />
-      <PageHero
-        crumb="Services"
-        eyebrow="Care at home"
+      <Banner
+        crumbs={[{ label: "Services", href: "/services" }]}
+        eyebrow="Care at home · Delaware County, PA"
         title="Everyday support, *personally* planned."
         description="Choose one service or combine several. Every plan is customized to your loved one's needs, preferences and routine."
-        image="/images/mobility.jpg"
-        imageAlt="Two caregivers helping a senior man stand from his bed"
-      >
-        <ButtonLink href={site.phoneHref} variant="leaf" icon={<Phone className="size-4" />} className="w-fit">
-          {site.phone}
-        </ButtonLink>
-      </PageHero>
+        slides={[{ src: "/images/mobility.jpg", alt: "Two caregivers helping a senior man stand from his bed", focus: "60% center" }]}
+        primary={{ label: "Request a care consultation", href: "/contact" }}
+        secondary={{ label: `Call ${site.phone}`, href: site.phoneHref }}
+      />
 
       <ServicesExplorer />
 
-      <section className="overflow-hidden bg-navy-950 py-24 text-white sm:py-28">
+      <section className="cv-auto overflow-hidden mx-3 rounded-[2.5rem] sm:mx-5 2xl:mx-auto 2xl:max-w-[90rem] bg-navy-950 py-24 text-white [contain-intrinsic-size:auto_490px] lg:[contain-intrinsic-size:auto_570px] sm:py-28">
         <div className="container-x">
           <SectionHeading dark align="center" eyebrow="Who we help" title="Support for every *season* of life." />
         </div>
@@ -63,7 +58,7 @@ export default function ServicesPage() {
           </Marquee>
           <Marquee duration={60} gap="1rem" reverse>
             {[...whoWeHelp].reverse().map((t) => (
-              <span key={t} className="whitespace-nowrap rounded-full border border-leaf-400/30 px-6 py-3 font-serif text-xl italic text-leaf-300">
+              <span key={t} className="whitespace-nowrap rounded-full border border-leaf-400/30 px-6 py-3 text-xl text-leaf-300">
                 {t}
               </span>
             ))}

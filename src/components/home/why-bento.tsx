@@ -13,10 +13,9 @@ const card = "h-full rounded-[2rem] border border-white/10 bg-white/[0.04] p-7";
 /** Dark bento grid with cursor-following glow on every tile. */
 export function WhyBento() {
   return (
-    <section className="grain relative overflow-hidden bg-navy-950 py-24 text-white sm:py-32">
-      <div aria-hidden className="bg-grid-dark pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,#000_10%,transparent_70%)]" />
-      <div aria-hidden className="pointer-events-none absolute -left-40 top-20 size-[30rem] rounded-full bg-navy-500/30 blur-[120px]" />
-      <div aria-hidden className="pointer-events-none absolute -right-40 bottom-0 size-[30rem] rounded-full bg-leaf-500/20 blur-[120px]" />
+    <section className="cv-auto grain relative overflow-hidden mx-3 rounded-[2.5rem] sm:mx-5 2xl:mx-auto 2xl:max-w-[90rem] [contain-intrinsic-size:auto_2040px] lg:[contain-intrinsic-size:auto_1250px] bg-navy-950 py-24 text-white sm:py-32">
+      <div aria-hidden className="pointer-events-none absolute -left-40 top-20 size-[30rem] rounded-full bg-navy-500/30 soft-glow" />
+      <div aria-hidden className="pointer-events-none absolute -right-40 bottom-0 size-[30rem] rounded-full bg-leaf-500/20 soft-glow" />
 
       <div className="container-x relative z-10">
         <SectionHeading

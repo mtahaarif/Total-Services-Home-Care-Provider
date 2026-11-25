@@ -193,7 +193,7 @@ export const services: ServiceCategory[] = [
     icon: "message-heart",
     tone: "leaf",
     items: [
-      { name: "Friendly Companionship", desc: "Friendly, reliable company for conversation, games, reading and favorite shows." },
+      { name: "Companion Care", desc: "Friendly, reliable company for conversation, games, reading and favorite shows." },
       { name: "Socialization & Emotional Support", desc: "Encouragement, a listening ear and help staying connected to the people and activities they love." },
     ],
     idealFor: ["Seniors living alone", "Early memory changes", "Grief & life transitions"],
@@ -228,7 +228,7 @@ export const services: ServiceCategory[] = [
     icon: "coffee",
     tone: "navy",
     items: [
-      { name: "Short-Term Relief Visits", desc: "Short-term or recurring relief for family caregivers, with the same attentive care your loved one is used to." },
+      { name: "Respite Visits", desc: "Short-term or recurring relief for family caregivers, with the same attentive care your loved one is used to." },
       { name: "Continuity of Routine", desc: "We follow your loved one's established routines and care plan, so time apart is seamless." },
     ],
     idealFor: ["Family caregivers", "Planned time away", "Preventing burnout"],
@@ -256,8 +256,10 @@ export const services: ServiceCategory[] = [
 export const allServiceNames = services
   .flatMap((s) => s.items.map((i) => i.name))
   .filter((n) => n !== "Continuity of Routine")
-  .map((n) => ({ "Short-Term Relief Visits": "Respite Care", "Friendly Companionship": "Companionship" })[n] ?? n);
+  .map((n) => ({ "Respite Visits": "Respite Care", "Companion Care": "Companionship" })[n] ?? n);
 
 export function getService(slug: string) {
   return services.find((s) => s.slug === slug);
 }
+
+export const serviceHref = (categorySlug: string) => `/services/${categorySlug}`;

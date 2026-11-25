@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
 /**
@@ -17,6 +17,15 @@ import { usePathname } from "next/navigation";
  */
 export function SectionReveal() {
   const pathname = usePathname();
+
+  // After the first in-site navigation (forward or back), switch hero headlines
+  // to the word-by-word mask-up entrance (globals.css `.navigated .hero-w`).
+  // A layout effect runs after the new route commits but before paint, so only
+  // the incoming page animates and the initial load keeps its LCP-safe entrance.
+  const firstPath = useRef(pathname);
+  useLayoutEffect(() => {
+    if (pathname !== firstPath.current) document.documentElement.classList.add("navigated");
+  }, [pathname]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;

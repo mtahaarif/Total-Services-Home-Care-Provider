@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { m, useScroll, useTransform, type MotionValue } from "motion/react";
+import { m, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { steps } from "@/lib/content";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { cn } from "@/lib/utils";
@@ -33,7 +33,7 @@ function StepCard({ i, progress }: { i: number; progress: MotionValue<number> })
       >
         <div className="flex flex-col justify-between gap-6 p-7 sm:p-10">
           <div className="flex items-center gap-4">
-            <span className={cn("font-serif text-6xl italic leading-none sm:text-7xl", tone.num)}>0{i + 1}</span>
+            <span className={cn("text-6xl leading-none sm:text-7xl", tone.num)}>0{i + 1}</span>
             <span className="h-px flex-1 bg-current opacity-20" />
             <span className="text-xs font-bold uppercase tracking-[0.2em] opacity-60">
               Step {i + 1} of {total}

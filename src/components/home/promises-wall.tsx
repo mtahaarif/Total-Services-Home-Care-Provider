@@ -31,7 +31,7 @@ export function PromisesWall() {
   const cols = [0, 1, 2].map((c) => cards.filter((_, i) => i % 3 === c));
 
   return (
-    <section className="relative overflow-hidden py-24 sm:py-32">
+    <section className="cv-auto relative overflow-hidden py-24 [contain-intrinsic-size:auto_1230px] lg:[contain-intrinsic-size:auto_860px] sm:py-32">
       <div className="container-x grid gap-14 lg:grid-cols-12">
         <div className="flex flex-col gap-8 lg:col-span-4">
           <SectionHeading

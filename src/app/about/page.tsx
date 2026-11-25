@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { BadgeCheck, Building2, MapPin, Phone } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
-import { PageHero } from "@/components/sections/page-hero";
+import { Banner } from "@/components/sections/banner";
 import { CtaBand } from "@/components/sections/cta-band";
 import { FaqSection } from "@/components/sections/faq-section";
 import { ValuesReveal } from "@/components/about/values-reveal";
@@ -33,13 +33,14 @@ export default function AboutPage() {
   return (
     <PageTransition>
       <JsonLd data={breadcrumbJsonLd([{ name: "About", path: "/about" }])} />
-      <PageHero
-        crumb="About"
+      <Banner
+        crumbs={[{ label: "About", href: "/about" }]}
         eyebrow={`Home care rooted in ${site.address.city}`}
         title="Care that feels like *family.*"
-        description="We're a local home care agency built on a simple belief: the people you love deserve to be cared for with patience, respect and warmth — at home."
-        image="/images/couple-window.jpg"
-        imageAlt="Senior couple smiling together by a sunny window"
+        description="A local home care agency built on a simple belief: the people you love deserve patience, respect and warmth — at home."
+        slides={[{ src: "/images/couple-window.jpg", alt: "Senior couple smiling together by a sunny window", focus: "65% center" }]}
+        primary={{ label: "Connect with our team", href: "/contact" }}
+        secondary={{ label: "Explore our services", href: "/services" }}
       />
 
       {/* Story with photo collage */}
@@ -118,7 +119,7 @@ export default function AboutPage() {
       </section>
 
       {/* Leadership + credentials */}
-      <section className="py-24 sm:py-32">
+      <section className="cv-auto py-24 [contain-intrinsic-size:auto_1390px] lg:[contain-intrinsic-size:auto_890px] sm:py-32">
         <div className="container-x">
           <SectionHeading eyebrow="Leadership & credentials" title="Accountable, local and *reachable.*" />
           <Stagger className="mt-12 grid gap-4 md:grid-cols-3">
@@ -128,7 +129,7 @@ export default function AboutPage() {
                 spot="rgb(152 200 96 / 0.25)"
               >
                 <div className="flex h-full flex-col justify-between gap-10">
-                  <span className="grid size-24 place-items-center rounded-full border border-white/20 bg-white/10 font-serif text-4xl italic text-leaf-300">
+                  <span className="grid size-24 place-items-center rounded-full border border-white/20 bg-white/10 text-4xl text-leaf-300">
                     {initials}
                   </span>
                   <div>

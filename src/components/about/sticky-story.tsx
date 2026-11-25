@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, m, useInView } from "motion/react";
+import { AnimatePresence, m, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -51,7 +51,7 @@ function Item({ i, active, onActive }: { i: number; active: boolean; onActive: (
       <div className="relative mb-6 aspect-[4/3] overflow-hidden rounded-[2rem] lg:hidden">
         <Image quality={60} src={it.image} alt={it.alt} fill sizes="100vw" className="object-cover" />
       </div>
-      <span className={cn("font-serif text-3xl italic transition-colors duration-500", active ? "text-leaf-500" : "text-navy-200")}>0{i + 1}</span>
+      <span className={cn("text-3xl transition-colors duration-500", active ? "text-leaf-500" : "text-navy-200")}>0{i + 1}</span>
       <h3 className={cn("mt-2 text-3xl font-extrabold tracking-tight transition-colors duration-500 sm:text-4xl", active ? "text-navy-950" : "text-navy-950/30")}>
         {it.title}
       </h3>

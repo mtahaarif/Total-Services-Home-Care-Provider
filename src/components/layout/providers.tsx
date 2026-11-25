@@ -1,17 +1,49 @@
 "use client";
 
-import { useEffect, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { ReactLenis, useLenis } from "lenis/react";
-import { LazyMotion, MotionConfig, m, useScroll, useSpring } from "motion/react";
+import type Lenis from "lenis";
+import { LazyMotion, MotionConfig, m, useScroll, useSpring } from "framer-motion";
 
-function ScrollReset() {
+/**
+ * Smooth wheel scrolling (Lenis), loaded on demand.
+ *
+ * Measured on the home page (mobile Lighthouse): running Lenis from page load
+ * cost ~1s of main-thread blocking. Lenis only changes *mouse-wheel* scrolling
+ * (touch is native either way), so it is now:
+ *   - never loaded on touch / coarse-pointer devices or with reduced motion,
+ *   - downloaded and started on the first wheel event on desktop.
+ * Page load pays nothing; desktop visitors still get the smooth feel.
+ */
+function SmoothScroll() {
+  const lenisRef = useRef<Lenis | null>(null);
   const pathname = usePathname();
-  const lenis = useLenis();
+
   useEffect(() => {
-    // Keep Lenis' internal position in sync with Next's scroll-to-top on navigation.
-    if (!window.location.hash) lenis?.scrollTo(0, { immediate: true, force: true });
-  }, [pathname, lenis]);
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduce) return;
+
+    let cancelled = false;
+    const start = async () => {
+      const { default: LenisCtor } = await import("lenis");
+      if (cancelled || lenisRef.current) return;
+      lenisRef.current = new LenisCtor({ lerp: 0.11, wheelMultiplier: 1, anchors: { offset: -110 }, autoRaf: true });
+    };
+    window.addEventListener("wheel", start, { once: true, passive: true });
+    return () => {
+      cancelled = true;
+      window.removeEventListener("wheel", start);
+      lenisRef.current?.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+
+  // Keep Lenis' internal position in sync with Next's scroll-to-top on navigation.
+  useEffect(() => {
+    if (!window.location.hash) lenisRef.current?.scrollTo(0, { immediate: true, force: true });
+  }, [pathname]);
+
   return null;
 }
 
@@ -27,34 +59,15 @@ function ScrollProgress() {
   );
 }
 
-const QUERY = "(prefers-reduced-motion: reduce)";
-function subscribe(cb: () => void) {
-  const mq = window.matchMedia(QUERY);
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-}
-
 export function Providers({ children }: { children: ReactNode }) {
-  const reduce = useSyncExternalStore(
-    subscribe,
-    () => window.matchMedia(QUERY).matches,
-    () => false,
-  );
-
   return (
-    // Animation features (incl. layout animations for the nav pills) load in a
-    // separate chunk after first paint, keeping them out of the LCP path.
+    // Animation features (domAnimation, no layout engine) load in a separate
+    // chunk after first paint, keeping them out of the LCP path.
     // `strict` makes any stray full-size `motion.*` component throw in dev.
     <LazyMotion features={loadFeatures} strict>
       <MotionConfig reducedMotion="user">
-        {reduce ? (
-          children
-        ) : (
-          <ReactLenis root options={{ lerp: 0.11, wheelMultiplier: 1, anchors: { offset: -110 }, autoRaf: true }}>
-            <ScrollReset />
-            {children}
-          </ReactLenis>
-        )}
+        <SmoothScroll />
+        {children}
         <ScrollProgress />
       </MotionConfig>
     </LazyMotion>

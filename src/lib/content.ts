@@ -29,6 +29,82 @@ export const faqs: Faq[] = [
   },
 ];
 
+/** Full FAQ page (/faq), grouped by topic. */
+export type FaqGroup = { id: string; title: string; items: Faq[] };
+
+export const faqGroups: FaqGroup[] = [
+  {
+    id: "getting-started",
+    title: "Getting started",
+    items: [
+      faqs[2],
+      faqs[0],
+      {
+        q: "Do I need a referral to contact you?",
+        a: "No. Families can call us directly to talk about care — you don't need a referral to start the conversation.",
+      },
+      {
+        q: "How soon can care begin?",
+        a: "It depends on your loved one's needs and the schedule you have in mind. Call us and we'll talk through timing and what we can arrange.",
+      },
+      {
+        q: "Can I arrange care for a parent who lives nearby while I live farther away?",
+        a: "Yes. Many families coordinate care from a distance. We'll keep you informed by phone so you know how your loved one is doing.",
+      },
+    ],
+  },
+  {
+    id: "our-services",
+    title: "Our services",
+    items: [
+      faqs[1],
+      {
+        q: "Can different services be combined in one visit?",
+        a: "Yes. Most care plans combine several services — for example personal care, meal preparation and companionship — so one familiar caregiver covers the whole visit.",
+      },
+      {
+        q: "Do you offer respite care for family caregivers?",
+        a: "Yes. Respite care gives family caregivers time to rest, work or travel, with a caregiver who follows your loved one's established routine.",
+      },
+      {
+        q: "Can you help after a hospital stay?",
+        a: "Yes. Support with personal care, mobility, meals and household tasks can make the return home safer and more comfortable. Tell us about your loved one's needs and their doctor's guidance.",
+      },
+      {
+        q: "Do you provide medical care?",
+        a: "Our services focus on personal care, companionship and help with daily living. If your loved one also needs skilled nursing or therapy, talk with us and their doctor about the right mix of support.",
+      },
+    ],
+  },
+  {
+    id: "scheduling-payment",
+    title: "Scheduling & payment",
+    items: [
+      faqs[3],
+      faqs[5],
+      {
+        q: "Can we change the care plan later?",
+        a: "Of course. Needs change over time, and we revisit the care plan with your family so support always fits where your loved one is today.",
+      },
+    ],
+  },
+  {
+    id: "our-caregivers",
+    title: "Our caregivers",
+    items: [
+      {
+        q: "Are your caregivers background checked?",
+        a: "Pennsylvania requires background checks for direct care workers, and our caregivers complete the required clearances before working with clients.",
+      },
+      {
+        q: "Will my loved one have the same caregiver?",
+        a: "We aim for consistency, because familiar faces help build trust and comfort. If a schedule change is ever needed, we'll let you know in advance.",
+      },
+      faqs[4],
+    ],
+  },
+];
+
 export const careerFaqs: Faq[] = [
   {
     q: "Do I need prior caregiving experience?",

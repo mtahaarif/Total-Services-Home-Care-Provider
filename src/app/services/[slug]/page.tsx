@@ -1,16 +1,14 @@
-import { ViewTransition } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, Check, Phone } from "lucide-react";
+import { ArrowUpRight, Check } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
 import { CtaBand } from "@/components/sections/cta-band";
+import { Banner } from "@/components/sections/banner";
 import { FaqSection } from "@/components/sections/faq-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
-import { AnimatedHeadline } from "@/components/ui/animated-headline";
-import { ButtonLink } from "@/components/ui/button";
 import { ServiceIcon } from "@/components/ui/icons";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -65,52 +63,35 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           ]),
         ]}
       />
-      <section className="relative overflow-hidden pb-20 pt-32 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 -z-10 size-[36rem] animate-blob rounded-full bg-leaf-200/50 blur-[110px]" />
-        <div className="container-x grid items-center gap-12 lg:grid-cols-2">
-          <div className="flex flex-col gap-6">
-            <Link
-              href="/services"
-              className="group inline-flex w-fit items-center gap-2 rounded-full border border-navy-100 bg-white/70 px-4 py-2 text-sm font-semibold text-navy-700 hover:bg-white"
-            >
-              <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-1" /> All services
-            </Link>
+      <Banner
+        crumbs={[
+          { label: "Services", href: "/services" },
+          { label: s.title, href: `/services/${s.slug}` },
+        ]}
+        eyebrow={s.tagline}
+        title={`${s.title} in ${site.address.city}, PA`}
+        description={s.short}
+        slides={[{ src: s.image, alt: s.imageAlt }]}
+        primary={{ label: `Ask about ${s.title.toLowerCase()}`, href: "/contact" }}
+        secondary={{ label: `Call ${site.phone}`, href: site.phoneHref }}
+        morphName={`svc-img-${s.slug}`}
+      />
+
+      {/* Intro */}
+      <section className="pt-16 sm:pt-20">
+        <div className="container-x grid gap-8 lg:grid-cols-12">
+          <div className="flex items-center gap-4 lg:col-span-4">
             <span className="grid size-14 place-items-center rounded-2xl bg-navy-600 text-leaf-300">
               <ServiceIcon icon={s.icon} className="size-6" />
             </span>
-            <AnimatedHeadline
-              as="h1"
-              immediate
-              text={s.title}
-              className="text-5xl font-extrabold leading-[1.02] text-navy-950 sm:text-6xl lg:text-7xl"
-            />
-            <p className="font-serif text-2xl italic text-navy-500">{s.tagline}</p>
-            <p className="max-w-xl text-lg leading-relaxed text-muted">{s.intro}</p>
-            <p className="max-w-xl text-muted">
+            <p className="text-2xl text-navy-500">{s.tagline}</p>
+          </div>
+          <div className="flex flex-col gap-4 lg:col-span-8">
+            <p className="text-lg leading-relaxed text-muted">{s.intro}</p>
+            <p className="text-muted">
               Available from <strong className="font-semibold text-navy-800">{site.legalName}</strong> for families in{" "}
               {site.address.city} and across {site.address.county}, PA.
             </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              <ButtonLink href={site.phoneHref} icon={<Phone className="size-4" />}>
-                Call {site.phone}
-              </ButtonLink>
-              <ButtonLink href="/contact" variant="outline">
-                Ask about {s.title.toLowerCase()}
-              </ButtonLink>
-            </div>
-          </div>
-          <div className="relative">
-            <ViewTransition name={`svc-img-${s.slug}`} share="morph" default="none">
-              <div className="relative aspect-[4/3.4] overflow-hidden rounded-[2.5rem] shadow-[0_40px_80px_-40px_rgb(8_26_48/0.55)]">
-                <Image src={s.image} alt={s.imageAlt} fill preload quality={60} sizes="(min-width:1024px) 40rem, 100vw" className="object-cover" />
-              </div>
-            </ViewTransition>
-            <div className="glass absolute -bottom-6 left-6 rounded-2xl px-5 py-4">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-navy-500">Included</p>
-              <p className="text-2xl font-extrabold text-navy-950">
-                {s.items.length} {s.items.length === 1 ? "service" : "services"}
-              </p>
-            </div>
           </div>
         </div>
       </section>
@@ -134,10 +115,10 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           <Stagger className="flex flex-col lg:col-span-8">
             {s.items.map((item, i) => (
               <StaggerItem key={item.name}>
-                <div className="group relative isolate overflow-hidden border-t border-navy-100 py-8 last:border-b">
+                <div className="group relative isolate block overflow-hidden border-t border-navy-100 py-8 last:border-b">
                   <div className="absolute inset-0 -z-10 origin-bottom scale-y-0 rounded-3xl bg-navy-600 transition-transform duration-700 ease-out-expo group-hover:scale-y-100" />
                   <div className="flex items-start gap-6 px-2 transition-[padding] duration-700 ease-out-expo group-hover:px-6">
-                    <span className="font-serif text-3xl italic text-leaf-500 transition-colors group-hover:text-leaf-300">0{i + 1}</span>
+                    <span className="text-3xl text-leaf-500 transition-colors group-hover:text-leaf-300">0{i + 1}</span>
                     <div className="flex-1">
                       <h3 className="text-2xl font-extrabold text-navy-950 transition-colors group-hover:text-white sm:text-3xl">{item.name}</h3>
                       <p className="mt-2 max-w-xl text-lg leading-relaxed text-muted transition-colors group-hover:text-white/80">{item.desc}</p>
@@ -156,12 +137,12 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
         <div className="container-x">
           <Reveal>
             <div className="grain relative overflow-hidden rounded-[2.5rem] bg-navy-950 p-8 text-white sm:p-14">
-              <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-leaf-400/20 blur-3xl" />
+              <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-leaf-400/20 soft-glow" />
               <div className="relative z-10 grid gap-8 lg:grid-cols-12">
                 <div className="lg:col-span-4">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-leaf-300">A day with us</p>
                   <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
-                    What a {s.title.toLowerCase()} visit <span className="font-serif font-normal italic text-leaf-300">looks like</span>
+                    What a {s.title.toLowerCase()} visit <span className="text-leaf-300">looks like</span>
                   </h2>
                 </div>
                 <p className="text-lg leading-relaxed text-white/80 lg:col-span-8">{s.visit}</p>
@@ -200,3 +181,4 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
     </PageTransition>
   );
 }
+

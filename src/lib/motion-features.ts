@@ -1,5 +1,7 @@
 // Loaded lazily by <LazyMotion> (see components/layout/providers.tsx).
-// domMax = animations + gestures + drag + layout animations (needed for layoutId).
-import { domMax } from "motion/react";
+// domAnimation = animations, exit (AnimatePresence), hover/tap/focus, in-view.
+// The site deliberately avoids layout animations (layout/layoutId) and drag,
+// so the much larger domMax / projection engine is never shipped.
+import { domAnimation } from "framer-motion";
 
-export default domMax;
+export default domAnimation;

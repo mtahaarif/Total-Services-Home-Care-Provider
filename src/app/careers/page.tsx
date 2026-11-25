@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { CalendarClock, Check, GraduationCap, HandHeart, Home, Users } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
-import { PageHero } from "@/components/sections/page-hero";
+import { Banner } from "@/components/sections/banner";
 import { FaqSection } from "@/components/sections/faq-section";
 import { CareersForm } from "@/components/forms/careers-form";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
-import { ButtonLink } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/json-ld";
 import { careerFaqs } from "@/lib/content";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
@@ -59,18 +58,15 @@ export default function CareersPage() {
   return (
     <PageTransition>
       <JsonLd data={breadcrumbJsonLd([{ name: "Careers", path: "/careers" }])} />
-      <PageHero
-        crumb="Careers"
-        eyebrow="Join our team"
+      <Banner
+        crumbs={[{ label: "Careers", href: "/careers" }]}
+        eyebrow="Join our caregiving team"
         title="Do work that *matters,* close to home."
         description="We're always glad to meet caring people who want to help neighbors in Delaware County live safely and comfortably at home."
-        image="/images/caregiver-portrait.jpg"
-        imageAlt="Smiling caregiver in a yellow cardigan"
-      >
-        <ButtonLink href="#apply" variant="leaf" className="w-fit">
-          Apply now
-        </ButtonLink>
-      </PageHero>
+        slides={[{ src: "/images/caregiver-portrait.jpg", alt: "Smiling caregiver in a yellow cardigan", focus: "70% center" }]}
+        primary={{ label: "Apply now", href: "#apply" }}
+        secondary={{ label: `Call ${site.phone}`, href: site.phoneHref }}
+      />
 
       {/* Perks — 3D tilt cards */}
       <section className="py-24 sm:py-32">
@@ -109,7 +105,7 @@ export default function CareersPage() {
       </section>
 
       {/* Roles — hover reveal */}
-      <section className="grain relative overflow-hidden bg-navy-950 py-24 text-white sm:py-32">
+      <section className="cv-auto grain relative overflow-hidden mx-3 rounded-[2.5rem] sm:mx-5 2xl:mx-auto 2xl:max-w-[90rem] bg-navy-950 py-24 text-white [contain-intrinsic-size:auto_1730px] lg:[contain-intrinsic-size:auto_880px] sm:py-32">
         <div className="container-x relative z-10">
           <SectionHeading dark eyebrow="Roles we hire for" title="Find the role that *fits* you." description="Interested? Apply below and we'll reach out when there's a match." />
           <div className="mt-12 grid gap-4 lg:grid-cols-3">
@@ -118,7 +114,7 @@ export default function CareersPage() {
                 <article className="group relative isolate flex h-[26rem] flex-col justify-end overflow-hidden rounded-[2rem] border border-white/10 p-7">
                   <Image quality={60} src={r.image} alt="" fill sizes="(min-width:1024px) 33vw, 100vw" className="-z-20 object-cover opacity-60 grayscale transition-all duration-1000 ease-out-expo group-hover:scale-110 group-hover:opacity-70 group-hover:grayscale-0" />
                   <div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950 via-navy-950/70 to-navy-950/20" />
-                  <span className="mb-auto font-serif text-2xl italic text-leaf-300">0{i + 1}</span>
+                  <span className="mb-auto text-2xl text-leaf-300">0{i + 1}</span>
                   <h3 className="text-2xl font-extrabold">{r.title}</h3>
                   <div className="grid grid-rows-[1fr] transition-[grid-template-rows] duration-700 ease-out-expo lg:grid-rows-[0fr] lg:group-hover:grid-rows-[1fr]">
                     <p className="overflow-hidden pt-3 leading-relaxed text-white/75">{r.body}</p>
@@ -132,8 +128,6 @@ export default function CareersPage() {
 
       {/* Apply */}
       <section id="apply" className="relative scroll-mt-24 overflow-hidden py-24 sm:py-32">
-        <div aria-hidden className="pointer-events-none absolute -left-40 top-20 -z-10 size-[34rem] animate-blob rounded-full bg-leaf-200/60 blur-[110px]" />
-        <div aria-hidden className="pointer-events-none absolute -right-40 bottom-0 -z-10 size-[34rem] animate-blob rounded-full bg-navy-200/60 blur-[110px] [animation-delay:-8s]" />
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="flex flex-col gap-8 lg:col-span-5">
             <SectionHeading eyebrow="Apply" title="Start your *application.*" description="It only takes a couple of minutes. We'll follow up by phone or email." />

@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  experimental: {
+    // framer-motion/motion-dom are large barrels; only load the modules we use
+    // (never the drag + layout-projection engines). Import from "framer-motion",
+    // not "motion/react" — the latter is a namespace re-export that pulls in
+    // the whole library.
+    optimizePackageImports: ["framer-motion", "motion-dom", "motion-utils"],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [60, 75],

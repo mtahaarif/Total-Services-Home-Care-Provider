@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
-import { PageHero } from "@/components/sections/page-hero";
+import { Banner } from "@/components/sections/banner";
 import { FaqSection } from "@/components/sections/faq-section";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { MapEmbed } from "@/components/ui/map-embed";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { JsonLd } from "@/components/seo/json-ld";
 import { faqs } from "@/lib/content";
@@ -25,18 +26,17 @@ export default function ContactPage() {
   return (
     <PageTransition>
       <JsonLd data={breadcrumbJsonLd([{ name: "Contact", path: "/contact" }])} />
-      <PageHero
-        crumb="Contact"
-        eyebrow="We're here to help"
+      <Banner
+        crumbs={[{ label: "Contact", href: "/contact" }]}
+        eyebrow="Schedule a care conversation"
         title="Let's start the *conversation.*"
         description="Whether you're planning ahead or need help soon, a quick call or message is the first step."
-        image="/images/couple-walk.jpg"
-        imageAlt="Senior couple walking hand in hand along a city street"
+        slides={[{ src: "/images/couple-walk.jpg", alt: "Senior couple walking hand in hand along a city street", focus: "60% center" }]}
+        primary={{ label: "Send a message", href: "#message" }}
+        secondary={{ label: `Call our office: ${site.phone}`, href: site.phoneHref }}
       />
 
       <section className="relative overflow-hidden py-24 sm:py-32">
-        <div aria-hidden className="pointer-events-none absolute -left-32 top-40 -z-10 size-[32rem] animate-blob rounded-full bg-leaf-200/60 blur-[110px]" />
-        <div aria-hidden className="pointer-events-none absolute -right-32 bottom-20 -z-10 size-[32rem] animate-blob rounded-full bg-navy-200/60 blur-[110px] [animation-delay:-9s]" />
 
         <div className="container-x grid gap-12 lg:grid-cols-12">
           {/* Ways to reach us */}
@@ -125,7 +125,7 @@ export default function ContactPage() {
           {/* Form */}
           <Reveal className="lg:col-span-7" y={40}>
             <div className="glass rounded-[2.5rem] p-6 sm:p-10">
-              <h2 className="text-3xl font-extrabold tracking-tight text-navy-950">Send us a message</h2>
+              <h2 id="message" className="scroll-mt-28 text-3xl font-extrabold tracking-tight text-navy-950">Send us a message</h2>
               <p className="mb-8 mt-2 text-muted">Share a few details and we&apos;ll get back to you.</p>
               <ContactForm />
             </div>
@@ -136,13 +136,7 @@ export default function ContactPage() {
       <section className="px-3 sm:px-5">
         <Reveal scale={0.97}>
           <div className="relative mx-auto max-w-[90rem] overflow-hidden rounded-[2.5rem]">
-            <iframe
-              title={`Map showing ${fullAddress}`}
-              src={site.mapsEmbed}
-              className="block h-[28rem] w-full grayscale-[30%]"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            <MapEmbed className="h-[28rem]" />
           </div>
         </Reveal>
       </section>

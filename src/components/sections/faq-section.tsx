@@ -1,4 +1,5 @@
-import { Phone } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Phone } from "lucide-react";
 import type { Faq } from "@/lib/content";
 import { site } from "@/lib/site";
 import { Accordion } from "@/components/ui/accordion";
@@ -19,7 +20,7 @@ export function FaqSection({
   title?: string;
 }) {
   return (
-    <section className="py-24 sm:py-32">
+    <section className="cv-auto py-24 [contain-intrinsic-size:auto_1200px] lg:[contain-intrinsic-size:auto_800px] sm:py-32">
       <JsonLd data={faqJsonLd(items)} />
       <div className="container-x grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
@@ -32,6 +33,9 @@ export function FaqSection({
                 <ButtonLink href={site.phoneHref} variant="leaf" className="mt-6" icon={<Phone className="size-4" />}>
                   {site.phone}
                 </ButtonLink>
+                <Link href="/faq" className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-white/85 hover:text-white">
+                  See all frequently asked questions <ArrowRight className="size-4" />
+                </Link>
               </div>
             </Reveal>
           </div>

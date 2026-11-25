@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { animate, useInView, useReducedMotion } from "motion/react";
+import { animate, useInView, useReducedMotion } from "framer-motion";
 
 /** Counts up from 0 to `to` the first time it scrolls into view. */
 export function Counter({

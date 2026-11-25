@@ -20,9 +20,12 @@ export function Brand({
         <Image
           src="/logo-mark.png"
           alt=""
-          width={201}
-          height={217}
+          // Real display size (≤44px) → 48w/96w variants of a few KB, instead of
+          // 256w/640w downloads that competed with the hero image for bandwidth.
+          width={44}
+          height={48}
           loading={eager ? "eager" : "lazy"}
+          fetchPriority={eager ? "low" : undefined}
           className={cn("h-auto", compact ? "w-9" : "w-11", dark && "w-10")}
         />
       </span>

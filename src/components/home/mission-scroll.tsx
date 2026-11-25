@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { m, useScroll, useTransform, type MotionValue } from "motion/react";
+import { m, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { site } from "@/lib/site";
 import { Eyebrow } from "@/components/ui/section-heading";
 
@@ -21,7 +21,7 @@ function Word({
   const y = useTransform(progress, range, [6, 0]);
   return (
     <span className="relative mr-[0.25em] inline-block">
-      <m.span style={{ opacity, y }} className={accent ? "inline-block font-serif font-normal italic text-navy-500" : "inline-block"}>
+      <m.span style={{ opacity, y }} className={accent ? "inline-block text-navy-500" : "inline-block"}>
         {children}
       </m.span>
     </span>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -8,20 +8,14 @@ import { SectionReveal } from "@/components/layout/section-reveal";
 import { Analytics } from "@/components/seo/analytics";
 import { JsonLd } from "@/components/seo/json-ld";
 import { pageMeta } from "@/lib/seo";
+import { revealBodyScript, revealHeadScript } from "@/lib/reveal-script";
 import { site } from "@/lib/site";
 import { allServiceNames } from "@/lib/services";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
+/** One typeface site-wide (benevolencehomeservices.com-style): Quicksand 300–700. */
+const quicksand = Quicksand({
+  variable: "--font-quicksand",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const instrument = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: "400",
-  style: "italic", // the serif is only ever used in italic — skip the upright file
   display: "swap",
 });
 
@@ -55,7 +49,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#081a30",
+  themeColor: "#ffffff",
 };
 
 const websiteJsonLd = {
@@ -97,7 +91,11 @@ const jsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${instrument.variable}`}>
+    // suppressHydrationWarning: the head script adds `js` to <html> before React hydrates.
+    <html lang="en" className={quicksand.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: revealHeadScript }} />
+      </head>
       <body className="flex min-h-dvh flex-col">
         <JsonLd data={[jsonLd, websiteJsonLd]} />
         <Analytics />
@@ -109,6 +107,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </main>
           <Footer />
         </Providers>
+        <script dangerouslySetInnerHTML={{ __html: revealBodyScript }} />
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, m } from "motion/react";
+import { AnimatePresence, m } from "framer-motion";
 import { CircleCheckBig, LoaderCircle, Send } from "lucide-react";
 import { submitApplication } from "@/app/actions";
 import { buttonClass } from "@/components/ui/button";
