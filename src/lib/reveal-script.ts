@@ -16,7 +16,7 @@ export const revealBodyScript = `(function(){
 var d=document.documentElement;
 if(!("IntersectionObserver" in window)){d.classList.remove("js");return;}
 var sel="[data-animate],[data-stagger],[data-words]";
-var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){var e=es[i];if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}},{rootMargin:"0px 0px -60px 0px"});
+var io=new IntersectionObserver(function(es){for(var i=0;i<es.length;i++){var e=es[i];if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}},{rootMargin:"0px 0px -24px 0px"});
 function scan(n){if(n.nodeType!==1)return;if(n.matches(sel)&&!n.classList.contains("in"))io.observe(n);var l=n.querySelectorAll(sel);for(var i=0;i<l.length;i++)if(!l[i].classList.contains("in"))io.observe(l[i]);}
 scan(document.body);
 new MutationObserver(function(ms){for(var i=0;i<ms.length;i++){var a=ms[i].addedNodes;for(var j=0;j<a.length;j++)scan(a[j]);}}).observe(document.body,{childList:true,subtree:true});

@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "lenis/dist/lenis.css";
 
 /* ------------------------------------------------------------------ */
 /*  Brand tokens — sampled from the Total Services logo               */
@@ -230,10 +229,10 @@
 .js [data-animate],
 .js [data-animate-child] {
   opacity: 0;
-  transform: translate3d(var(--ax, 0), var(--ay, 32px), 0) scale(var(--as, 1));
+  transform: translate3d(var(--ax, 0), var(--ay, 22px), 0) scale(var(--as, 1));
   transition:
-    opacity 0.9s var(--ease-out-expo) var(--d, 0s),
-    transform 0.9s var(--ease-out-expo) var(--d, 0s);
+    opacity 0.6s var(--ease-out-expo) var(--d, 0s),
+    transform 0.6s var(--ease-out-expo) var(--d, 0s);
 }
 .js [data-animate].in,
 .js [data-stagger].in > [data-animate-child] {
@@ -265,8 +264,8 @@
 }
 .js [data-words] .hlw-i {
   transform: translateY(110%) rotate(4deg);
-  transition: transform 0.9s var(--ease-out-expo);
-  transition-delay: calc(var(--d, 0s) + var(--w, 0) * 55ms);
+  transition: transform 0.6s var(--ease-out-expo);
+  transition-delay: calc(var(--d, 0s) + var(--w, 0) * 35ms);
 }
 .js [data-words].in .hlw-i {
   transform: none;
@@ -283,10 +282,10 @@
 .hlw:nth-child(n + 11) .hlw-i { --w: 10; }
 
 /* Transform-only: never invisible, so it can't delay LCP. */
-.enter-rise { animation: rise 1.1s var(--ease-out-expo) both; }
+.enter-rise { animation: rise 0.7s var(--ease-out-expo) both; }
 
-.enter-fade-up { animation: fade-up 0.9s var(--ease-out-expo) both; }
-.enter-fade-in { animation: fade-in 0.8s ease-out both; }
+.enter-fade-up { animation: fade-up 0.55s var(--ease-out-expo) both; }
+.enter-fade-in { animation: fade-in 0.5s ease-out both; }
 .enter-unclip { animation: unclip 1.3s var(--ease-out-expo) both; }
 
 /* Headings use Quicksand semibold, like the reference site. Unlayered so it
@@ -346,14 +345,14 @@
 /* Route change: the outgoing page dissolves quickly, the incoming page fades
    in softly over 0.4s ease-out (benevolencehomeservices.com-style page fade). */
 ::view-transition-old(.page) {
-  animation: 160ms ease-out both vt-fade-out;
+  animation: 110ms ease-out both vt-fade-out;
 }
 ::view-transition-new(.page) {
-  animation: 400ms ease-out 60ms both vt-fade-in;
+  animation: 260ms ease-out 30ms both vt-fade-in;
 }
 
 ::view-transition-group(.morph) {
-  animation-duration: 560ms;
+  animation-duration: 420ms;
   animation-timing-function: var(--ease-out-expo);
 }
 ::view-transition-image-pair(.morph) {
@@ -397,8 +396,8 @@
   animation: none;
 }
 .navigated .hero-w {
-  animation: hero-word-up 0.9s var(--ease-out-expo) both;
-  animation-delay: calc(0.18s + var(--w, 0) * 60ms);
+  animation: hero-word-up 0.6s var(--ease-out-expo) both;
+  animation-delay: calc(0.06s + var(--w, 0) * 35ms);
 }
 @keyframes hero-word-up {
   from { transform: translateY(110%); }
@@ -410,13 +409,13 @@
 @keyframes vt-via-blur { 30% { filter: blur(4px); } }
 
 /* Section reveal on scroll (see components/layout/section-reveal.tsx):
-   below-the-fold sections fade in over 0.9s as they enter the viewport. */
+   below-the-fold sections fade in over 0.5s as they enter the viewport. */
 .reveal-pending {
   opacity: 0;
 }
 .reveal-shown {
   opacity: 1;
-  transition: opacity 0.9s ease-in-out;
+  transition: opacity 0.5s ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -456,3 +455,116 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/*  Scroll-driven effects — native CSS (animation-timeline), run by    */
+/*  the browser off the main thread: zero JavaScript per scroll frame. */
+/*  Browsers without support get a clean, static layout instead.      */
+/* ------------------------------------------------------------------ */
+@keyframes sd-grow-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes sd-rail { from { transform: translateX(0); } to { transform: translateX(calc(-1 * var(--rail-dist, 0px))); } }
+@keyframes sd-step-shrink { from { transform: scale(1); } to { transform: scale(var(--target, 1)); } }
+@keyframes sd-step-img { from { transform: scale(1.25); } to { transform: scale(1); } }
+@keyframes sd-word { from { opacity: 0.14; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes sd-drift-a { from { transform: translateY(60px) rotate(-6deg); } to { transform: translateY(-60px) rotate(4deg); } }
+@keyframes sd-drift-b { from { transform: translateY(-30px); } to { transform: translateY(50px); } }
+
+/* Reading progress bar */
+.scroll-progress { display: none; }
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    transform-origin: left;
+    animation: sd-grow-x linear both;
+    animation-timeline: scroll(root);
+  }
+
+  /* Home: stacking "how it works" cards */
+  .steps { view-timeline-name: --steps; }
+  .step-card {
+    animation: sd-step-shrink linear both;
+    animation-timeline: --steps;
+    animation-range: contain var(--from, 0%) contain 100%;
+  }
+  .step-img {
+    animation: sd-step-img linear both;
+    animation-timeline: --steps;
+    animation-range: contain var(--from, 0%) contain var(--to, 100%);
+  }
+
+  /* Home: mission statement lights up word by word */
+  .mission-text { view-timeline-name: --mission; }
+  .mission-word {
+    animation: sd-word linear both;
+    animation-timeline: --mission;
+    animation-range: cover var(--s) cover var(--e);
+  }
+  .drift-a, .drift-b {
+    animation: sd-drift-a linear both;
+    animation-timeline: view();
+    animation-range: cover;
+  }
+  .drift-b { animation-name: sd-drift-b; }
+}
+
+/* Home: vertical scroll drives the pinned, horizontally moving services rail
+   (desktop + support + motion allowed; otherwise a native swipe carousel). */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .rail {
+      view-timeline-name: --rail;
+      height: calc(100vh + var(--rail-dist, 0px));
+      padding-block: 0;
+    }
+    .rail-sticky {
+      position: sticky;
+      top: 0;
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2.5rem;
+      overflow: hidden;
+      padding-top: 4rem;
+    }
+    .rail-track {
+      width: max-content;
+      margin-top: 0;
+      overflow: visible;
+      scroll-snap-type: none;
+      animation: sd-rail linear both;
+      animation-timeline: --rail;
+      animation-range: contain 0% contain 100%;
+    }
+    .rail-bar {
+      display: flex;
+    }
+    .rail-bar-fill {
+      transform-origin: left;
+      animation: sd-grow-x linear both;
+      animation-timeline: --rail;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress,
+  .step-card,
+  .step-img,
+  .mission-word,
+  .drift-a,
+  .drift-b {
+    animation: none !important;
+  }
+}
+
+/* Success-state icon pop (forms) */
+@keyframes pop-in {
+  from { transform: scale(0) rotate(-90deg); }
+  70% { transform: scale(1.08) rotate(6deg); }
+  to { transform: none; }
+}
+.enter-pop { animation: pop-in 0.5s var(--ease-out-expo) 0.08s both; }
+@media (prefers-reduced-motion: reduce) { .enter-pop { animation: none; } }

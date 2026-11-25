@@ -3,7 +3,6 @@ import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { Providers } from "@/components/layout/providers";
 import { SectionReveal } from "@/components/layout/section-reveal";
 import { Analytics } from "@/components/seo/analytics";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -99,14 +98,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-dvh flex-col">
         <JsonLd data={[jsonLd, websiteJsonLd]} />
         <Analytics />
-        <Providers>
+        {/* Reading progress — native CSS scroll timeline, no JavaScript (globals.css). */}
+        <div aria-hidden className="scroll-progress fixed inset-x-0 top-0 z-[60] h-[3px] bg-gradient-to-r from-leaf-400 via-leaf-300 to-navy-400" />
           <SectionReveal />
           <Header />
           <main id="main" className="flex-1">
             {children}
           </main>
           <Footer />
-        </Providers>
         <script dangerouslySetInnerHTML={{ __html: revealBodyScript }} />
       </body>
     </html>

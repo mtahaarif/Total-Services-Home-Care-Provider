@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, m } from "framer-motion";
 import { ArrowRight, ChevronDown, Phone, X } from "lucide-react";
 import { nav, site } from "@/lib/site";
 import { serviceHref, services } from "@/lib/services";
@@ -11,7 +10,6 @@ import { ServiceIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { Brand } from "./brand";
 
-const ease = [0.32, 0.72, 0, 1] as const;
 
 export function Header() {
   const pathname = usePathname();
@@ -85,7 +83,7 @@ export function Header() {
 
       <header
         style={{ viewTransitionName: "site-header" }}
-        className="fixed inset-x-0 top-0 z-50 border-b border-navy-100/70 bg-white/75 backdrop-blur-[16px]"
+        className="fixed inset-x-0 top-0 z-50 border-b border-navy-100/70 bg-white/85 backdrop-blur-md"
       >
         <div className="container-x flex h-[72px] items-center justify-between gap-6">
           <Brand eager />
@@ -226,24 +224,26 @@ export function Header() {
       </header>
 
       {/* Mobile menu: frosted right-hand drawer */}
-      <AnimatePresence>
-        {open && (
-          <div id="mobile-menu" className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-            <m.div
+      {/* Always mounted; slides with CSS transitions. `inert` while closed keeps it
+          out of the tab order and the accessibility tree. */}
+      <div
+        id="mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        inert={!open}
+        className={cn("fixed inset-0 z-[60] lg:hidden", open ? "visible" : "invisible transition-[visibility] delay-[400ms]")}
+      >
+            <div
               aria-hidden
-              className="fixed inset-0 bg-navy-950/40 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              className={cn("fixed inset-0 bg-navy-950/40 transition-opacity duration-300", open ? "opacity-100" : "opacity-0")}
               onClick={() => setOpen(false)}
             />
-            <m.div
-              className="fixed inset-y-0 right-0 flex w-full max-w-sm flex-col overflow-y-auto border-l border-white/40 bg-white/85 px-6 py-6 shadow-2xl backdrop-blur-2xl sm:max-w-md"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.45, ease }}
+            <div
+              className={cn(
+                "fixed inset-y-0 right-0 flex w-full max-w-sm flex-col overflow-y-auto border-l border-white/40 bg-white/95 px-6 py-6 shadow-2xl transition-transform duration-[400ms] [transition-timing-function:cubic-bezier(0.32,0.72,0,1)] sm:max-w-md",
+                open ? "translate-x-0" : "translate-x-full",
+              )}
             >
               <div className="flex items-center justify-between border-b border-navy-950/10 pb-6">
                 <span className="text-lg font-black uppercase tracking-widest text-navy-600">Menu</span>
@@ -267,11 +267,10 @@ export function Header() {
                       active ? "bg-navy-50 text-navy-600" : "text-ink",
                     );
                     return (
-                      <m.li
+                      <li
                         key={item.href}
-                        initial={{ opacity: 0, x: 24 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.12 + i * 0.04, duration: 0.4, ease }}
+                        style={{ transitionDelay: open ? `${100 + i * 35}ms` : "0ms" }}
+                        className={cn("transition-[opacity,transform] duration-300 ease-out", open ? "translate-x-0 opacity-100" : "translate-x-6 opacity-0")}
                       >
                         {item.href === "/services" ? (
                           <div className="flex flex-col">
@@ -320,7 +319,7 @@ export function Header() {
                             {item.label}
                           </Link>
                         )}
-                      </m.li>
+                      </li>
                     );
                   })}
                 </ul>
@@ -334,10 +333,8 @@ export function Header() {
                   <Phone className="size-5" /> Call: {site.phone}
                 </a>
               </div>
-            </m.div>
-          </div>
-        )}
-      </AnimatePresence>
+            </div>
+      </div>
     </>
   );
 }

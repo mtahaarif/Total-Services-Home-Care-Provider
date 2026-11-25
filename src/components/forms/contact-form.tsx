@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
 import { CircleCheckBig, LoaderCircle, Send } from "lucide-react";
 import { submitContact } from "@/app/actions";
 import { services } from "@/lib/services";
@@ -13,28 +12,22 @@ export function ContactForm() {
   const e = state.errors ?? {};
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <>
       {state.status === "success" ? (
-        <m.div
-          key="done"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex min-h-[28rem] flex-col items-center justify-center gap-4 text-center"
+        <div
+          className="enter-fade-up flex min-h-[28rem] flex-col items-center justify-center gap-4 text-center"
           role="status"
         >
-          <m.span
-            initial={{ scale: 0, rotate: -90 }}
-            animate={{ scale: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.1 }}
-            className="grid size-20 place-items-center rounded-full bg-leaf-400 text-navy-950"
+          <span
+            className="enter-pop grid size-20 place-items-center rounded-full bg-leaf-400 text-navy-950"
           >
             <CircleCheckBig className="size-9" />
-          </m.span>
+          </span>
           <h3 className="text-3xl font-extrabold text-navy-950">Message sent</h3>
           <p className="max-w-sm text-muted">{state.message ?? "Thank you — we'll be in touch shortly."}</p>
-        </m.div>
+        </div>
       ) : (
-        <m.form key="form" method="post" exit={{ opacity: 0, y: -10 }} onSubmit={onSubmit} noValidate className="relative flex flex-col gap-4">
+        <form method="post" onSubmit={onSubmit} noValidate className="relative flex flex-col gap-4">
           <Honeypot />
           <Field label="Your name *" name="name" autoComplete="name" required error={e.name} />
           <div className="grid gap-4 sm:grid-cols-2">
@@ -77,8 +70,8 @@ export function ContactForm() {
             )}
           </button>
           <p className="text-center text-xs text-muted">We&apos;ll only use your details to respond to your inquiry.</p>
-        </m.form>
+        </form>
       )}
-    </AnimatePresence>
+    </>
   );
 }

@@ -43,7 +43,7 @@ export function SectionReveal() {
               observer?.unobserve(entry.target);
             }
           },
-          { rootMargin: "0px 0px -12% 0px", threshold: 0.05 },
+          { rootMargin: "0px 0px -4% 0px", threshold: 0 },
         );
 
         const sections = document.querySelectorAll<HTMLElement>("main section");

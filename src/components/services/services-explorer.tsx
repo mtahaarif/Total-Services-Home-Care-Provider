@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, ViewTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useInView } from "framer-motion";
+import { useInView } from "@/lib/use-in-view";
 import { ArrowRight, Check } from "lucide-react";
 import { services, type ServiceCategory } from "@/lib/services";
 import { ServiceIcon } from "@/components/ui/icons";
