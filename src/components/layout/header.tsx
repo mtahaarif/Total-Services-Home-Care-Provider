@@ -60,7 +60,9 @@ export function Header() {
     pill.style.opacity = "1";
     if (appearing) requestAnimationFrame(() => (pill.style.transitionProperty = ""));
   };
-  const activeLi = () => listRef.current?.querySelector<HTMLElement>('a[aria-current="page"]')?.parentElement;
+  // The active *top-level* item (not a link inside the services dropdown, and not
+  // the inner wrapper around the Services link + chevron).
+  const activeLi = () => listRef.current?.querySelector<HTMLElement>(':scope > li[data-active="true"]');
 
   useEffect(() => {
     const list = listRef.current;
@@ -113,6 +115,7 @@ export function Header() {
                   return (
                     <li
                       key={item.href}
+                      data-active={active}
                       className={cn("relative", isServices && "group")}
                       onPointerEnter={(e) => placePill(e.currentTarget)}
                     >
