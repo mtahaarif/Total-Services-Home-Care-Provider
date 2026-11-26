@@ -3,7 +3,8 @@ import { Clock, Mail, MapPin, Navigation, Phone } from "lucide-react";
 import { PageTransition } from "@/components/layout/page-transition";
 import { Banner } from "@/components/sections/banner";
 import { FaqSection } from "@/components/sections/faq-section";
-import { ContactForm } from "@/components/forms/contact-form";
+import { JotformEmbed } from "@/components/forms/jotform-embed";
+import { jotformIds } from "@/lib/site";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { MapEmbed } from "@/components/ui/map-embed";
@@ -21,6 +22,8 @@ export const metadata: Metadata = pageMeta({
 });
 
 const lightSpot = { spot: "rgb(42 99 153 / 0.10)", spotBorder: "rgb(42 99 153 / 0.55)" };
+
+const CONTACT_FORM_ID = jotformIds.contact;
 
 export default function ContactPage() {
   return (
@@ -124,10 +127,12 @@ export default function ContactPage() {
 
           {/* Form */}
           <Reveal className="lg:col-span-7" y={40}>
-            <div className="glass rounded-[2.5rem] p-6 sm:p-10">
-              <h2 id="message" className="scroll-mt-28 text-3xl font-extrabold tracking-tight text-navy-950">Send us a message</h2>
-              <p className="mb-8 mt-2 text-muted">Share a few details and we&apos;ll get back to you.</p>
-              <ContactForm />
+            <div className="rounded-[2.5rem] border border-navy-100 bg-white px-3 pb-3 pt-7 shadow-[0_30px_70px_-45px_rgb(8_26_48/0.45)] sm:px-5 sm:pt-9">
+              <div className="px-3 sm:px-5">
+                <h2 id="message" className="scroll-mt-28 text-3xl font-extrabold tracking-tight text-navy-950">Send us a message</h2>
+                <p className="mt-2 text-muted">Share a few details and we&apos;ll get back to you.</p>
+              </div>
+              <JotformEmbed formId={CONTACT_FORM_ID} title="Contact Total Services Home Care Provider" minHeight={720} className="mt-4" />
             </div>
           </Reveal>
         </div>

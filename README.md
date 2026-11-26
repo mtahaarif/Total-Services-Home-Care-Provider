@@ -1,6 +1,6 @@
 # Total Services Home Care Provider — Website
 
-Next.js 16 (App Router, Cache Components) · React 19.3 · Tailwind CSS 4 · Motion · Lenis
+Next.js 16 (App Router, Cache Components) · React 19.3 · Tailwind CSS 4 · zero animation libraries (native CSS)
 
 ```bash
 npm install
@@ -28,16 +28,15 @@ npm run build && npm start
 - **Search Console** — verify the domain in Google Search Console and submit `/sitemap.xml`.
 - **Real photos** of the team/office would beat stock photos — drop them into `public/images/` with the same filenames.
 
-### Contact & careers forms
-The forms use Server Actions (`src/app/actions.ts`) and send email via [Resend](https://resend.com) when these env vars are set:
+### Contact & careers forms (Jotform)
+Both forms are published Jotform forms embedded with `<JotformEmbed>` (`src/components/forms/jotform-embed.tsx`). Their public IDs live in `jotformIds` in `src/lib/site.ts`:
 
-```
-RESEND_API_KEY=...
-CONTACT_TO_EMAIL=office@yourdomain.com
-CONTACT_FROM_EMAIL="Total Services Website <noreply@yourdomain.com>"   # verified sender
-```
+| Page | Form |
+| --- | --- |
+| `/contact` | `263287071195462` — Contact Us |
+| `/careers` | `263286830533460` — Application for Employment |
 
-Without them, submissions are logged to the console in development and the form shows a "please call us" error in production, so leads are never silently lost.
+Submissions, notification emails and the thank-you message are managed in Jotform. The embed resizes to the form's height automatically (Jotform `setHeight` messages). Only ever store the public form ID — never a builder link or its `iak=` access key.
 
 ## SEO & performance notes
 - Every page builds full metadata with `pageMeta()` (`src/lib/seo.ts`): self-referencing HTTPS canonical, `og:url`, title ≤ 60 chars, description ≤ 155 chars. Next merges metadata shallowly, so never set only `description` on a page.
@@ -45,16 +44,17 @@ Without them, submissions are logged to the console in development and the form 
 - `/llms.txt` is generated from the same data for AI answer engines.
 - FAQ answers stay in the HTML when collapsed (crawlable); avoid conditionally rendering content.
 - Hero headlines must stay visible on first paint (`AnimatedHeadline immediate`) — hiding them, even briefly, delays LCP.
-- Motion uses `LazyMotion` + `m.*` components; animation features load after first paint. Use `m.div`, never `motion.div` (strict mode throws).
+- No animation libraries. Entrances are CSS toggled by one shared IntersectionObserver (`src/lib/reveal-script.ts`); scroll-linked effects (services rail, stacking steps, mission words, parallax, progress bar) use native CSS scroll-driven animations (`animation-timeline`) with a static fallback — no JavaScript runs per scroll frame.
+- Off-screen sections use `content-visibility: auto` (`cv-auto`); keep their `contain-intrinsic-size` close to real heights.
 - Security headers (CSP, X-Frame-Options, nosniff, HSTS, Referrer/Permissions-Policy) are set in `next.config.ts`. Add any new third-party domain to the CSP there.
 
 ## Motion & UI techniques used
-- **Page transitions** — React `<ViewTransition>`: soft 0.4s ease-out page fade (inspired by benevolencehomeservices.com) + shared-element image morph from `/services` cards into `/services/[slug]` heroes.
-- **Section reveal** — every below-the-fold section fades in over 0.9s as it scrolls into view (`components/layout/section-reveal.tsx`); applied only after load and only off-screen, so it never affects LCP or crawlers.
-- **Smooth scrolling** — Lenis; scroll progress bar.
+- **Page transitions** — React `<ViewTransition>`: quick fade (inspired by benevolencehomeservices.com) + shared-element image morph from `/services` cards into `/services/[slug]` banners; hero headlines rise word by word after in-site navigation.
+- **Section reveal** — every below-the-fold section fades in over 0.5s as it scrolls into view (`components/layout/section-reveal.tsx`); applied only after load and only off-screen, so it never affects LCP or crawlers.
+- **Scrolling** — native browser scrolling; reading-progress bar via CSS scroll timeline.
 - **Home** — masked word-reveal headline, parallax image stack with floating glass cards and a rotating text badge; dual infinite service tickers; scroll-linked word-by-word mission reveal; pinned **horizontal scroll** service rail (swipe carousel on mobile); **vertical stacking** step cards; dark **spotlight-glow bento** with counters; auto-scrolling testimonial/promise columns (pause on hover); town marquee + map; sticky-sidebar FAQ.
 - **About** — un-clipping parallax hero, photo collage, **expanding value panels**, **sticky sidebar** image that cross-fades as each commitment scrolls by.
 - **Services** — **scroll-spy sticky sidebar** with animated active pill, spotlight cards, hover-sweep detail rows.
-- **Careers** — **3D tilt** cards with sheen, hover-reveal role cards, glass application form.
-- Hide-on-scroll glass navbar, magnetic CTAs, circular-reveal mobile menu.
+- **Careers** — **3D tilt** cards with sheen, hover-reveal role cards, embedded Jotform application.
+- Frosted sticky navbar with services dropdown, magnetic CTAs, right-hand drawer mobile menu.
 - Respects `prefers-reduced-motion` throughout.

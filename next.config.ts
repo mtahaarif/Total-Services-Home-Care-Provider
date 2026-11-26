@@ -14,7 +14,7 @@ const csp = [
   "img-src 'self' blob: data: https://www.googletagmanager.com https://*.google-analytics.com",
   "font-src 'self'",
   "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
-  "frame-src https://www.google.com https://maps.google.com https://www.googletagmanager.com",
+  "frame-src https://www.google.com https://maps.google.com https://www.googletagmanager.com https://form.jotform.com https://*.jotform.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

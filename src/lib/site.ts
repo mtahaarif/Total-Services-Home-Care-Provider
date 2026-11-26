@@ -79,6 +79,15 @@ function resolveSiteUrl() {
   return "https://total-services-home-care-provider.vercel.app";
 }
 
+/**
+ * Published Jotform form IDs (public). Submissions and notification emails are
+ * managed in Jotform. Never put builder links or access keys (iak=...) here.
+ */
+export const jotformIds = {
+  contact: "263287071195462",
+  careers: "263286830533460",
+} as const;
+
 export const fullAddress = `${site.address.street}, ${site.address.city}, ${site.address.state} ${site.address.zip}`;
 
 /**

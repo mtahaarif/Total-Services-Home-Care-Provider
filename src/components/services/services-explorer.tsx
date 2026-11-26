@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, ViewTransition } from "react";
+import { memo, useEffect, useRef, useState, ViewTransition } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useInView } from "@/lib/use-in-view";
@@ -11,7 +11,16 @@ import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
-function CategorySection({ s, index, onActive }: { s: ServiceCategory; index: number; onActive: (slug: string) => void }) {
+// Memoized: changing the active category only re-renders the sidebar, not all six sections.
+const CategorySection = memo(function CategorySection({
+  s,
+  index,
+  onActive,
+}: {
+  s: ServiceCategory;
+  index: number;
+  onActive: (slug: string) => void;
+}) {
   const ref = useRef<HTMLElement>(null);
   const inView = useInView(ref, { margin: "-40% 0px -55% 0px" });
   useEffect(() => {
@@ -82,7 +91,7 @@ function CategorySection({ s, index, onActive }: { s: ServiceCategory; index: nu
       </Reveal>
     </section>
   );
-}
+});
 
 /** Sticky sidebar navigation with scroll-spy + mobile pill bar. */
 export function ServicesExplorer() {

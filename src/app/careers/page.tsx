@@ -4,14 +4,14 @@ import { CalendarClock, Check, GraduationCap, HandHeart, Home, Users } from "luc
 import { PageTransition } from "@/components/layout/page-transition";
 import { Banner } from "@/components/sections/banner";
 import { FaqSection } from "@/components/sections/faq-section";
-import { CareersForm } from "@/components/forms/careers-form";
+import { JotformEmbed } from "@/components/forms/jotform-embed";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { TiltCard } from "@/components/ui/tilt-card";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { JsonLd } from "@/components/seo/json-ld";
 import { careerFaqs } from "@/lib/content";
 import { breadcrumbJsonLd, pageMeta } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { jotformIds, site } from "@/lib/site";
 
 export const metadata: Metadata = pageMeta({
   title: `Caregiver Jobs in ${site.address.city}, PA`,
@@ -130,7 +130,7 @@ export default function CareersPage() {
       <section id="apply" className="relative scroll-mt-24 overflow-hidden py-24 sm:py-32">
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="flex flex-col gap-8 lg:col-span-5">
-            <SectionHeading eyebrow="Apply" title="Start your *application.*" description="It only takes a couple of minutes. We'll follow up by phone or email." />
+            <SectionHeading eyebrow="Apply" title="Start your *application.*" description="Complete the application below and our team will follow up by phone or email." />
             <Reveal delay={0.1}>
               <p className="mb-4 text-navy-950">
                 <strong className="font-bold">What we look for</strong>
@@ -148,8 +148,8 @@ export default function CareersPage() {
             </Reveal>
           </div>
           <Reveal className="lg:col-span-7" y={40}>
-            <div className="glass rounded-[2.5rem] p-6 sm:p-10">
-              <CareersForm />
+            <div className="rounded-[2.5rem] border border-navy-100 bg-white p-3 shadow-[0_30px_70px_-45px_rgb(8_26_48/0.45)] sm:p-5">
+              <JotformEmbed formId={jotformIds.careers} title="Application for employment — Total Services Home Care Provider" minHeight={1400} />
             </div>
           </Reveal>
         </div>
